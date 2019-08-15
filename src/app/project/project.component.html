@@ -1,0 +1,23 @@
+<button pButton type="button" label="Back to Main Page" routerLink="/" class="back-button"></button>
+<!-- Think abbout back button position -->
+
+
+<div class="container" id="project-page">
+  <h1>New Project</h1>
+
+  <div>
+    <div class="form-group">
+      <label>Project Name:</label>
+      <input type="text" required pInputText [(ngModel)]="project_name" required>
+
+    </div>
+
+    <div class="form-group">
+      <label>Project Language:</label>
+      <p-dropdown [options]="languages" [(ngModel)]="selected_lang" required="true"></p-dropdown>
+    </div>
+
+  </div>
+
+  <button pButton type="button" label="Create New Project" (click)="gotoEditor()" ></button>
+</div>

@@ -1,0 +1,53 @@
+button {
+  background-color: #7289da !important;
+  border-color: #7289da !important;
+
+  // might change the colors
+  padding: 15px 30px;
+  color: white !important;
+  font-weight: bold;
+
+  border-radius: 5px;
+
+
+
+}
+
+.container{
+
+  text-align: center;
+  //padding: 150px;
+
+  position: relative;
+  top: 50%;
+  transform: translateY(40%);
+}
+
+
+
+ .button{
+  background-color: #7289da !important;
+
+}
+
+h1{
+  font-size: 64px;
+  text-align: center;
+
+  margin-bottom: 5px;
+
+}
+
+img{
+  text-align: center;
+}
+
+.button-row{
+
+  text-align: center;
+}
+
+#editor-button{
+
+  margin-top: 20px;
+}

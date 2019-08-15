@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+
+
+  background-color: #23272a;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+
+  height: 100%;
+}
+
+.container{
+
+  text-align: center;
+  //padding: 150px;
+
+  position: relative;
+  top: 50%;
+  transform: translateY(50%);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+button {
+  background-color: #7289da !important;
+  border-color: #7289da !important;
+
+  // might change the colors
+  padding: 15px 30px;
+  color: white !important;
+  font-weight: bold;
+
+  border-radius: 5px;
+
+
+
+}

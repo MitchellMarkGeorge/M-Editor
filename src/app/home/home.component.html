@@ -1,0 +1,34 @@
+
+<div class="container">
+  <div class="inner">
+    <img src="../../assets/M_white.png" alt="logo" width="200" height="142">
+
+    <!-- image path will change when i production to ./assets/M_white.png i think -->
+    <h1>M-Editor</h1>
+    <h3><i>Faster. Simpler. Smarter. Better.</i></h3>
+
+  <div class="button-row">
+    <!-- <p-button label="Existing Project" styleClass="button" style="margin-right: 20px;"></p-button>
+    <p-button label="New Project" styleClass="button" routerLink="/new-project"></p-button> -->
+
+    <button pButton type="button" label="Existing Project" style="margin-right: 20px;" (click)="openFileDialog()"></button>
+    <button pButton type="button" label="New Project" routerLink="/new-project"></button>
+
+
+
+  <!-- </div>
+
+
+
+
+      <button pButton type="button" label="Open Selected Project in Editor" (click)="gotoEditorPage()" id="editor-button"></button>
+
+      <div>
+      <p>{{filepath}}</p>
+     </div>
+
+
+
+
+  </div> -->
+</div>
