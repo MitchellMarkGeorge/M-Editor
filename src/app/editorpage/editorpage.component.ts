@@ -23,6 +23,7 @@ export class EditorpageComponent implements OnInit {
   project_map: any;
   project_path;
   final_tree: any;
+  filetreeVisible: boolean = true;
 
   constructor(public route: ActivatedRoute) { }
 
@@ -53,6 +54,10 @@ export class EditorpageComponent implements OnInit {
 
     remote.getCurrentWindow().maximize();
 
+  }
+
+  toggleFiletree() {
+    this.filetreeVisible = !this.filetreeVisible;
   }
 
 }

@@ -39,7 +39,6 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-host-metadata-property": true,
-    "no-inferrable-types": [true, "ignore-params"],
     "no-input-rename": true,
     "no-inputs-metadata-property": true,
     "no-misused-new": true,

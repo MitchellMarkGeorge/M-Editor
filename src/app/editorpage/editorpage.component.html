@@ -1,12 +1,22 @@
 <div class="p-grid p-dir-col">
   <div class="p-col" id="toolbar">
     <div id="button-col">
-        <button pButton type="button" icon="pi pi-play" iconPos="center"></button>
+        <button pButton type="button" icon="pi pi-play" iconPos="left" label="Run"></button>
+        <button pButton type="button" icon="pi pi-save" iconPos="left" label="Save"></button>
+        <button pButton type="button" icon="pi pi-folder" iconPos="left" label="Open Project"></button>
+        <button pButton type="button" icon="pi pi-user" iconPos="left" label="Git Intigration"></button>
+        <!-- go to git integration page? -->
+        <button pButton type="button" icon="pi pi-sitemap" iconPos="left" label="Toggle Filetree" (click)="toggleFiletree()"></button>
+        <!-- remove buttons and have shortcuts -->
     </div>
 
   </div>
   <!-- toolbar with buttons -->
-  <div class="p-col" id="editor">Hello</div>
+  <div class="p-col" id="editor">
+  <div class="p-grid">
+    <div *ngIf="filetreeVisible" class="p-col-2" id="test">Hello</div>
+  </div>
+</div>
   <!-- editor grid up here  -->
 
 
