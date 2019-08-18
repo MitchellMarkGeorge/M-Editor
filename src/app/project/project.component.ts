@@ -5,6 +5,8 @@ import {SelectItem} from 'primeng/api';
 import * as fs from 'fs';
 import * as os from 'os';
 
+import * as path from 'path';
+
 // can i import nodejs modules in like this????
 import { Router } from '@angular/router';
 import { ElectronService } from '../core/services';
@@ -20,7 +22,7 @@ export class ProjectComponent implements OnInit {
 
   languages: SelectItem[] = [{label: 'Select Language', value: null}, {label: 'Javascript', value: 'Javascript'}, {label: 'Typescript', value: 'Typescript'}, {label: 'Python', value: 'Python'}, {label: 'Java', value: 'Java'}, {label: 'C++', value: 'C++'}, {label: 'C#', value: 'C#'}];
   project_name: string = undefined; // " ";
-  selected_lang: SelectItem = undefined;
+  selected_lang = undefined;
   path: string;
 
 
@@ -66,7 +68,7 @@ export class ProjectComponent implements OnInit {
     if (fs.existsSync(this.path)) {
       // alert('Project already exists. Try another project name');
       this.showErrorDialog('Project of same name already exists', 'Please try again.');
-
+      return; // do nothing
       // for alters, show error dialogs
     }
 
@@ -74,17 +76,7 @@ export class ProjectComponent implements OnInit {
     console.log(this.selected_lang);
 
 
-     fs.mkdir(this.path, (err) => {
-
-      if (err) {
-        this.showErrorDialog('Unable to make Project directory', 'Please try again');
-      }
-
-     });
-
-     if (this.selected_lang.label === 'Javascript') fs.writeFileSync(`${this.path}/index.js`, 'Start Programming!');
-      // might use async version
-    // in that dir, make a file based on the selected language
+    this.createfiles();
 
 
 
@@ -97,6 +89,38 @@ export class ProjectComponent implements OnInit {
   showErrorDialog(title: string, message: string) {
     const dialog = this.electron.remote.dialog;
     dialog.showErrorBox(title, message);
+  }
+
+
+  createfiles() {
+    fs.mkdir(this.path, (err) => {
+
+      if (err) {
+        this.showErrorDialog('Unable to make Project directory', 'Please try again');
+      }
+
+     });
+
+     if (this.selected_lang === 'Javascript') {
+       fs.writeFileSync(path.resolve(this.path, 'index.js'), 'console.log("Start Programming!")');
+
+      } else if (this.selected_lang === 'Typescript') {
+        fs.writeFileSync(path.resolve(this.path, 'index.ts'), 'console.log("Start Programming!")');
+
+      } else if (this.selected_lang === 'Java') {
+        fs.writeFileSync(path.resolve(this.path, 'Hello.java'), 'public class Hello {} ');
+
+      } else if (this.selected_lang === 'Python') {
+        fs.writeFileSync(path.resolve(this.path, 'hello.py'), 'print("Start Programming")');
+
+      } else if (this.selected_lang === 'C++') {
+        fs.writeFileSync(path.resolve(this.path, 'Hello.cpp'), '');
+
+      } else if (this.selected_lang === 'C#') {
+        fs.writeFileSync(path.resolve(this.path, 'Hello.cs'), '');
+      }
+      // might use async version
+    // in that dir, make a file based on the selected language
   }
 
 
