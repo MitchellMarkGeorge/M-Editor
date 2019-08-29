@@ -28,7 +28,9 @@ import { ProjectComponent } from './project/project.component';
 import { EditorpageComponent } from './editorpage/editorpage.component';
 
 import {TreeModule} from 'primeng/tree';
-import {TreeNode} from 'primeng/api';
+
+
+
 
 
 
@@ -45,7 +47,9 @@ import {TreeNode} from 'primeng/api';
     ButtonModule,
     InputTextModule,
     DropdownModule,
-    TreeModule
+    TreeModule,
+
+
   ],
   providers: [],
   bootstrap: [AppComponent]

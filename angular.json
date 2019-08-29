@@ -22,7 +22,12 @@
               "src/favicon.png",
               "src/favicon.icns",
               "src/favicon.256x256.png",
-              "src/favicon.512x512.png"
+              "src/favicon.512x512.png",
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor/min",
+                "output": "/assets/monaco"
+              }
             ],
             "styles": [
               "node_modules/primeicons/primeicons.css",
@@ -30,6 +35,9 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeflex/primeflex.css",
               "src/styles.scss"
+
+
+
 
             ],
             "scripts": []

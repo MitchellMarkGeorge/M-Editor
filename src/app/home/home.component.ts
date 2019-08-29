@@ -45,12 +45,12 @@ export class HomeComponent implements OnInit {
     (file) => {
       if (file) {
         this.filepath = file[0]; // first element in the array
-        this.zone.run(() => {this.router.navigateByUrl('/editor-page'); });
+        this.zone.run(() => { this.router.navigate(['/editor-page'], {queryParams: {path: this.filepath}}); });
 
         // needed to navigate properly - nead to read up about zones in Angular
         console.log({file});
 
-        console.log(this.router.url);
+
 
       }
     });
@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
 
     // work on openg projects
 
-    this.router.navigate(['/editor-page'], {queryParams: {path: this.filepath}});
+
   }
 
   showErrorDialog(title: string, message: string) {

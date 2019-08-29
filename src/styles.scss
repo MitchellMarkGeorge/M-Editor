@@ -1,9 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~codemirror/lib/codemirror";
+@import "~codemirror/theme/darcula";
+@import "~codemirror/theme/material";
+
+
+
+
 html, body {
   margin: 0;
 
 
-  background-color: #23272a;
+  background-color: #2c2f33;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 

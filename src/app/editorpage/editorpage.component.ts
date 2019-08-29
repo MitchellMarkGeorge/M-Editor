@@ -7,10 +7,14 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import * as process from 'process';
+
 
 import { remote } from 'electron';
 
-import * as monaco from 'monaco-editor';
+import * as codemirror from 'codemirror';
+import { Tree } from 'primeng/tree';
+
 
 
 
@@ -22,8 +26,10 @@ import * as monaco from 'monaco-editor';
 export class EditorpageComponent implements OnInit {
   project_map: any;
   project_path;
-  final_tree: any;
+  final_tree: TreeNode[];
   filetreeVisible: boolean = true;
+  
+
 
   constructor(public route: ActivatedRoute) { }
 
@@ -32,22 +38,46 @@ export class EditorpageComponent implements OnInit {
     // resize window
     this.resize();
 
+
     this.route.queryParamMap.subscribe( param => {
       this.project_map = param;
     });
+
+    console.log(this.project_path);
 
     this.project_path = this.project_map.params.path;
 
     console.table(this.project_path);
 
 
+
+
     // monaco editor
 
-    // monaco.editor.create(document.getElementById('editor'), {
+    // monaco.editor.create(document.getElementById("container"), {
     //   // test config
     //   language: 'javascript',
-    //   theme: 'vs'
+    //   theme: 'vs',
+    //   automaticLayout: true
     // });
+
+    // let something = this.makeFileTree(this.project_path);
+
+    // console.log(something);
+
+    let options = { lineNumbers: true,
+    theme: 'darcula',
+    // theme: 'material'
+    mode: 'javascript',
+    autocorrect: true,
+    spellcheck: true
+  };
+
+    let editor = codemirror(document.getElementById('editor'), options);
+
+
+
+
   }
 
   resize() {
@@ -58,6 +88,33 @@ export class EditorpageComponent implements OnInit {
 
   toggleFiletree() {
     this.filetreeVisible = !this.filetreeVisible;
+  }
+
+
+  makeFileTree(path) {
+
+    fs.readdir(path, (err, files) => {
+      if (files) {
+        files.forEach(file => {
+          let file_path = `${this.project_path}/${file}`;
+          fs.stat(file_path, (err, stats) => {
+            let fileobj: TreeNode & any = {};
+            // fileobj.label = path.basename(file_path);
+            fileobj.isDirectory = stats.isDirectory;
+            (fileobj.isDirectory) ? fileobj.icon = 'fa fa-folder' : fileobj.icon = 'fa fa-file';
+            if (fileobj.isDirectory) {
+              this.makeFileTree(file_path);
+            }
+
+            return files;
+
+          });
+        });
+      }
+    });
+
+
+
   }
 
 }
