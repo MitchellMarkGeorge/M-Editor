@@ -28,7 +28,7 @@ export class EditorpageComponent implements OnInit {
   project_path;
   final_tree: TreeNode[];
   filetreeVisible: boolean = true;
-  
+
 
 
   constructor(public route: ActivatedRoute) { }
@@ -80,6 +80,7 @@ export class EditorpageComponent implements OnInit {
 
   }
 
+  
   resize() {
 
     remote.getCurrentWindow().maximize();
