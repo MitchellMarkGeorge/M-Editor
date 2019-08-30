@@ -74,8 +74,9 @@
   "dependencies": {
     "@angular/animations": "^8.2.2",
     "@angular/cdk": "^8.1.2",
-    "@covalent/code-editor": "^2.1.1",
+    "@types/codemirror": "0.0.76",
     "codemirror": "^5.48.4",
+    "directory-tree": "^2.2.4",
     "monaco-editor": "^0.17.1",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^2.0.0",

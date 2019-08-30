@@ -15,6 +15,10 @@ import { remote } from 'electron';
 import * as codemirror from 'codemirror';
 import { Tree } from 'primeng/tree';
 
+import * as dirtree from 'directory-tree';
+
+
+
 
 
 
@@ -26,8 +30,9 @@ import { Tree } from 'primeng/tree';
 export class EditorpageComponent implements OnInit {
   project_map: any;
   project_path;
-  final_tree: TreeNode[];
+  final_tree: any;
   filetreeVisible: boolean = true;
+  tree;
 
 
 
@@ -48,6 +53,8 @@ export class EditorpageComponent implements OnInit {
     this.project_path = this.project_map.params.path;
 
     console.table(this.project_path);
+
+
 
 
 
@@ -75,12 +82,58 @@ export class EditorpageComponent implements OnInit {
 
     let editor = codemirror(document.getElementById('editor'), options);
 
+    this.final_tree = dirtree(this.project_path);
+    this.final_tree.label = this.final_tree.name.name;
+    this.final_tree.icon = 'fa fa-folder';
+
+    //let arr = {data: [this.final_tree]};
+
+    console.log(this.final_tree);
+
+    // this.final_tree.children.forEach(element => {
+
+    //   element.label = element.name;
+    //   if (element.type = 'directory') {
+    //     element.icon = 'fa fa-folder';
+    //   }
+
+    //   element.icon = 'fa fa-file';
+
+    // });
+
+    this.arraylabel(this.final_tree.children);
+
+    let arr = [this.final_tree];
+
+    console.log(arr);
+
+    this.tree = arr;
+
 
 
 
   }
 
-  
+  arraylabel(array) {
+
+    array.forEach(element => {
+
+      element.label = element.name;
+
+      if (element.children) {
+        this.arraylabel(element.children);
+        element.expandedIcon = 'fa fa-folder-open';
+        element.collapsedIcon = 'fa fa-folder';
+      }
+
+      element.icon = 'fa fa-file-word-o';
+
+    });
+
+
+  }
+
+
   resize() {
 
     remote.getCurrentWindow().maximize();
@@ -92,30 +145,38 @@ export class EditorpageComponent implements OnInit {
   }
 
 
-  makeFileTree(path) {
+  makeFileTree(project_path) {
 
-    fs.readdir(path, (err, files) => {
+    fs.readdir(project_path, (err, files) => {
       if (files) {
-        files.forEach(file => {
-          let file_path = `${this.project_path}/${file}`;
+        return files.forEach(file => {
+          let file_path = path.join(project_path, file);
           fs.stat(file_path, (err, stats) => {
-            let fileobj: TreeNode & any = {};
+            let fileobj: TreeNode | any = {};
             // fileobj.label = path.basename(file_path);
+            fileobj.label = path.basename(file_path);
             fileobj.isDirectory = stats.isDirectory;
-            (fileobj.isDirectory) ? fileobj.icon = 'fa fa-folder' : fileobj.icon = 'fa fa-file';
+            fileobj.path = file_path;
+            fileobj.icon = 'fa fa-file';
             if (fileobj.isDirectory) {
-              this.makeFileTree(file_path);
+              fileobj.icon = 'fa fa-folder';
+              fileobj.children = this.makeFileTree(file_path);
             }
 
-            return files;
-
+            //console.log(fileobj);
           });
         });
+
+        console.log(files);
       }
     });
 
 
 
+
+
   }
+
+
 
 }
