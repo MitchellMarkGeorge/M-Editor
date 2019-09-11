@@ -1,3 +1,4 @@
+import { NodeapiService } from './../nodeapi.service';
 import { ElectronService } from './../core/services/electron/electron.service';
 import { Component, OnInit, NgZone } from '@angular/core';
 
@@ -7,9 +8,14 @@ import { Component, OnInit, NgZone } from '@angular/core';
 
 import * as os from 'os';
 import * as fs from 'fs';
+import * as path from 'path';
 
 // can i import nodejs modules in like this????
 import { Router } from '@angular/router';
+import Filetree from '../filetree';
+
+
+
 
 
 
@@ -24,8 +30,9 @@ export class HomeComponent implements OnInit {
   os: any;
 
   filepath: string;
+  loading;
 
-  constructor(public electron: ElectronService, public router: Router, public zone: NgZone) { }
+  constructor(public electron: ElectronService, public router: Router, public zone: NgZone, public nodeservice: NodeapiService ) { }
 
   ngOnInit() {
 
@@ -44,8 +51,21 @@ export class HomeComponent implements OnInit {
 
     (file) => {
       if (file) {
+
         this.filepath = file[0]; // first element in the array
-        this.zone.run(() => { this.router.navigate(['/editor-page'], {queryParams: {path: this.filepath}}); });
+
+        // let tree = new Filetree(this.filepath, path.basename(this.filepath));
+
+        // tree.build();
+
+
+        //console.log(tree);
+
+        // fs.readdir(this.filepath, (err, files) => { if (files) {console.log(files); } });
+
+        // console.log(test);
+
+         this.zone.run(() => { this.final_navigation(); });
 
         // needed to navigate properly - nead to read up about zones in Angular
         console.log({file});
@@ -70,6 +90,16 @@ export class HomeComponent implements OnInit {
   showErrorDialog(title: string, message: string) {
     const dialog = this.electron.remote.dialog;
     dialog.showErrorBox(title, message);
+  }
+
+  navigate() {
+    this.router.navigate(['/editor-page']);
+  }
+
+  final_navigation() {
+    this.nodeservice.createtree(this.filepath).then(() =>
+    {
+       this.navigate(); });
   }
 
 }

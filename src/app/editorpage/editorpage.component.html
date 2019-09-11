@@ -16,7 +16,9 @@
   <div class="p-col" id="editor-grid">
     <div class="p-grid">
       <div *ngIf="filetreeVisible" class="p-col-fixed" id="test">
+        <div id="tree">
         <p-tree [value]=tree></p-tree>
+      </div>
       </div>
       <div class="p-col">
           <div id="editor"></div>
@@ -24,6 +26,8 @@
     </div>
 </div>
 </div>
+
+<button pButton type="button" label="Home" routerLink="/"></button>
 
 
 

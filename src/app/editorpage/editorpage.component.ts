@@ -16,6 +16,7 @@ import * as codemirror from 'codemirror';
 import { Tree } from 'primeng/tree';
 
 import * as dirtree from 'directory-tree';
+import { NodeapiService } from '../nodeapi.service';
 
 
 
@@ -31,12 +32,12 @@ export class EditorpageComponent implements OnInit {
   project_map: any;
   project_path;
   final_tree: any;
-  filetreeVisible: boolean = true;
-  tree;
+  filetreeVisible: boolean = false;
+  tree = undefined;
 
 
 
-  constructor(public route: ActivatedRoute) { }
+  constructor( public nodeservice: NodeapiService ) { }
 
   ngOnInit() {
 
@@ -44,15 +45,23 @@ export class EditorpageComponent implements OnInit {
     this.resize();
 
 
-    this.route.queryParamMap.subscribe( param => {
-      this.project_map = param;
-    });
+    // this.route.queryParamMap.subscribe( param => {
+    //   this.project_map = param;
+    // });
 
-    console.log(this.project_path);
+    // console.log(this.project_path);
 
-    this.project_path = this.project_map.params.path;
+    // this.project_path = this.project_map.params.path;
 
-    console.table(this.project_path);
+    // console.table(this.project_path);
+
+
+
+    
+
+    console.log(this.tree);
+
+    // this.tree = this.nodeservice.returntree();
 
 
 
@@ -82,13 +91,32 @@ export class EditorpageComponent implements OnInit {
 
     let editor = codemirror(document.getElementById('editor'), options);
 
-    this.final_tree = dirtree(this.project_path);
-    this.final_tree.label = this.final_tree.name.name;
-    this.final_tree.icon = 'fa fa-folder';
+
+    // this.final_tree = dirtree(this.project_path);
+    // this.final_tree.label = this.final_tree.name.name;
+    // this.final_tree.icon = 'fa fa-folder';
 
     //let arr = {data: [this.final_tree]};
 
     console.log(this.final_tree);
+
+    // this.getDirTree().then(() => {
+
+    //   this.final_tree.label = this.final_tree.name.name;
+    //   this.final_tree.icon = 'fa fa-folder';
+
+
+
+    //   this.arraylabel(this.final_tree.children);
+
+    //   let arr = [this.final_tree];
+
+    //   console.log(arr);
+
+    //   this.tree = arr;
+    // });
+
+    //setTimeout()
 
     // this.final_tree.children.forEach(element => {
 
@@ -101,13 +129,22 @@ export class EditorpageComponent implements OnInit {
 
     // });
 
-    this.arraylabel(this.final_tree.children);
+    // this.arraylabel(this.final_tree.children);
 
-    let arr = [this.final_tree];
+    // let arr = [this.final_tree];
 
-    console.log(arr);
+    // console.log(arr);
 
-    this.tree = arr;
+    // this.tree = arr;
+
+    // setInterval(() => {
+    //   this.getDirTree();
+    // }, 3000);
+
+    console.log('done');
+
+
+
 
 
 
@@ -141,41 +178,63 @@ export class EditorpageComponent implements OnInit {
   }
 
   toggleFiletree() {
+
     this.filetreeVisible = !this.filetreeVisible;
-  }
 
+    // if (this.tree === undefined) {
+    //   console.log('hello');
+    //   this.getDirTree();
+    // }
 
-  makeFileTree(project_path) {
-
-    fs.readdir(project_path, (err, files) => {
-      if (files) {
-        return files.forEach(file => {
-          let file_path = path.join(project_path, file);
-          fs.stat(file_path, (err, stats) => {
-            let fileobj: TreeNode | any = {};
-            // fileobj.label = path.basename(file_path);
-            fileobj.label = path.basename(file_path);
-            fileobj.isDirectory = stats.isDirectory;
-            fileobj.path = file_path;
-            fileobj.icon = 'fa fa-file';
-            if (fileobj.isDirectory) {
-              fileobj.icon = 'fa fa-folder';
-              fileobj.children = this.makeFileTree(file_path);
-            }
-
-            //console.log(fileobj);
-          });
-        });
-
-        console.log(files);
-      }
-    });
 
 
 
 
 
   }
+
+  async getDirTree() {
+
+    // error here  - figure out why
+
+    this.final_tree = dirtree(this.project_path);
+
+    console.log(this.final_tree);
+
+  }
+
+
+  // makeFileTree(project_path) {
+
+  //   fs.readdir(project_path, (err, files) => {
+  //     if (files) {
+  //       return files.forEach(file => {
+  //         let file_path = path.join(project_path, file);
+  //         fs.stat(file_path, (err, stats) => {
+  //           let fileobj: TreeNode | any = {};
+  //           // fileobj.label = path.basename(file_path);
+  //           fileobj.label = path.basename(file_path);
+  //           fileobj.isDirectory = stats.isDirectory;
+  //           fileobj.path = file_path;
+  //           fileobj.icon = 'fa fa-file';
+  //           if (fileobj.isDirectory) {
+  //             fileobj.icon = 'fa fa-folder';
+  //             fileobj.children = this.makeFileTree(file_path);
+  //           }
+
+  //           //console.log(fileobj);
+  //         });
+  //       });
+
+  //       console.log(files);
+  //     }
+  //   });
+
+
+
+
+
+  // }
 
 
 

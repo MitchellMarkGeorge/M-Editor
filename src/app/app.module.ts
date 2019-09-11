@@ -36,6 +36,9 @@ import {TreeModule} from 'primeng/tree';
 
 
 
+
+
+
 @NgModule({
   declarations: [AppComponent, HomeComponent, ProjectComponent, EditorpageComponent],
   imports: [
@@ -47,7 +50,8 @@ import {TreeModule} from 'primeng/tree';
     ButtonModule,
     InputTextModule,
     DropdownModule,
-    TreeModule,
+    TreeModule
+
 
 
   ],

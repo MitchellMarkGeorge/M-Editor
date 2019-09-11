@@ -10,6 +10,9 @@ import * as path from 'path';
 // can i import nodejs modules in like this????
 import { Router } from '@angular/router';
 import { ElectronService } from '../core/services';
+import { NodeapiService } from '../nodeapi.service';
+
+
 
 
 @Component({
@@ -37,7 +40,7 @@ export class ProjectComponent implements OnInit {
   // only pass path as query param
 
 
-  constructor(public router: Router, public electron: ElectronService) { }
+  constructor(public router: Router, public electron: ElectronService, public nodeservice: NodeapiService) { }
 
   ngOnInit() {
 
@@ -51,6 +54,8 @@ export class ProjectComponent implements OnInit {
         // alert('New Project fields are not filled');
         // test this condition
 
+        // toast
+
 
 
 
@@ -61,7 +66,9 @@ export class ProjectComponent implements OnInit {
         // so it dosent do anything
     }
 
-    this.path = `${os.homedir}/${this.project_name}`;
+    this.path = `${os.homedir}/${this.project_name}`;// path.join()
+
+    // HAVE A PATH FIELS
 
 
 
@@ -83,7 +90,9 @@ export class ProjectComponent implements OnInit {
 
      // navigate to editor with path param
 
-     this.router.navigate(['/editor-page'], {queryParams: {path: this.path}});
+     this.nodeservice.createFileTree(this.path).then(() => { this.router.navigate(['/editor-page']); });
+
+     // this.router.navigate(['/editor-page']);
   }
 
   showErrorDialog(title: string, message: string) {
