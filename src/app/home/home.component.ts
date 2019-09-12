@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log(this.filepath);
+    //console.log(this.filepath);
 
     // figure out how to show selescted project filepath
 

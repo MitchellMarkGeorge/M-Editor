@@ -57,11 +57,13 @@ export class EditorpageComponent implements OnInit {
 
 
 
-    
+
+
+    // console.log(this.tree);
+
+    this.tree = [this.nodeservice.returntree()];
 
     console.log(this.tree);
-
-    // this.tree = this.nodeservice.returntree();
 
 
 
@@ -98,7 +100,7 @@ export class EditorpageComponent implements OnInit {
 
     //let arr = {data: [this.final_tree]};
 
-    console.log(this.final_tree);
+    //console.log(this.final_tree);
 
     // this.getDirTree().then(() => {
 
