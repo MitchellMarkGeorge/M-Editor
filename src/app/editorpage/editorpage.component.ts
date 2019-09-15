@@ -84,8 +84,8 @@ export class EditorpageComponent implements OnInit {
     // console.log(something);
 
     let options = { lineNumbers: true,
-    theme: 'darcula',
-    // theme: 'material'
+    //theme: 'darcula',
+    theme: 'material',
     mode: 'javascript',
     autocorrect: true,
     spellcheck: true

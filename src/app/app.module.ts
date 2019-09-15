@@ -1,3 +1,4 @@
+import { NodeapiService } from './nodeapi.service';
 
 // import 'reflect-metadata';
 // import '../polyfills';
@@ -28,6 +29,9 @@ import { ProjectComponent } from './project/project.component';
 import { EditorpageComponent } from './editorpage/editorpage.component';
 
 import {TreeModule} from 'primeng/tree';
+import {BlockUIModule} from 'primeng/blockui';
+
+
 
 
 
@@ -50,12 +54,13 @@ import {TreeModule} from 'primeng/tree';
     ButtonModule,
     InputTextModule,
     DropdownModule,
-    TreeModule
+    TreeModule,
+    BlockUIModule
 
 
 
   ],
-  providers: [],
+  providers: [NodeapiService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

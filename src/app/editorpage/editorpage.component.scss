@@ -44,7 +44,9 @@ button{
   // flex-direction: column !important;
   padding: 20px !important;
 
-  
+  height: 10000px !important;
+
+
 
   // height: 200px !important;
 
@@ -62,6 +64,15 @@ button{
     padding: 0.571em 1em !important;
     background-color: #23272a !important;
 
+}
+
+#codeeditor{
+  //height: 650px !important;
+  //height: 100%;
+}
+
+.CodeMirror{
+  height: -webkit-fill-available !important;
 }
 
 // #tree{

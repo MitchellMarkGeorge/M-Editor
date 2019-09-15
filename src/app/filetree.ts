@@ -13,6 +13,9 @@ export default class Filetree {
   path: string;
   label: string;
   children;
+  document;
+  // add icons
+  // create codemirrot documents for each file
 
 
 
@@ -33,21 +36,47 @@ export default class Filetree {
     let fileArray = [];
 
     fs.readdirSync(path).forEach(file => {
-      let file_info = new Filetree(path_os.join(path, file), file);
+      let file_path = path_os.join(path, file);
+      let file_info = new Filetree(file_path, file);
 
-      let stat = fs.statSync(file_info.path);
+      //let stat = fs.statSync(file_info.path);
 
-      if (stat.isDirectory()) {
-        file_info.children = Filetree.readDir(file_info.path);
+      fs.stat(file_info.path, (err, stat) => {if (stat){
 
-      } else if (stat.isFile()) {
-        delete file_info.children;
-      }
+        if (stat.isDirectory()) {
+          file_info.children = Filetree.readDir(file_info.path);
+          delete file_info.document;
 
-      // should i still do this???
+        } else if (stat.isFile()) {
+          delete file_info.children;
+
+        fs.readFile(file_path, (err, file) => {if (file) { file_info.document = file.toString() }});
+          // file_info.document = data;
+        }
+
+        // should i still do this???
 
 
-    fileArray.push(file_info);
+      fileArray.push(file_info);
+
+
+      }});
+
+    //   if (stat.isDirectory()) {
+    //     file_info.children = Filetree.readDir(file_info.path);
+    //     delete file_info.document;
+
+    //   } else if (stat.isFile()) {
+    //     delete file_info.children;
+
+    //   fs.readFile(file_path, (err, file) => {if (file) { file_info.document = file.toString() }});
+    //     // file_info.document = data;
+    //   }
+
+    //   // should i still do this???
+
+
+    // fileArray.push(file_info);
 
 
     });

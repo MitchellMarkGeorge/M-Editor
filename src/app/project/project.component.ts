@@ -66,8 +66,8 @@ export class ProjectComponent implements OnInit {
         // so it dosent do anything
     }
 
-    this.path = `${os.homedir}/${this.project_name}`;// path.join()
-
+    this.path = `${os.homedir}/${this.project_name}`;//  USE path.join()
+    //path.join(os.homedir(), this.project_name)
     // HAVE A PATH FIELS
 
 
@@ -112,9 +112,13 @@ export class ProjectComponent implements OnInit {
 
      if (this.selected_lang === 'Javascript') {
        fs.writeFileSync(path.resolve(this.path, 'index.js'), 'console.log("Start Programming!")');
+       // npm init
 
       } else if (this.selected_lang === 'Typescript') {
         fs.writeFileSync(path.resolve(this.path, 'index.ts'), 'console.log("Start Programming!")');
+        // npm init -y
+        // tsc init
+        // npm install --save-dev typescript ??
 
       } else if (this.selected_lang === 'Java') {
         fs.writeFileSync(path.resolve(this.path, 'Hello.java'), 'public class Hello {} ');

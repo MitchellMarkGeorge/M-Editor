@@ -6,6 +6,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 
 
 
+
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -30,8 +31,8 @@ export class HomeComponent implements OnInit {
   os: any;
 
   filepath: string;
-  loading;
-
+  blocked;
+  message;
   constructor(public electron: ElectronService, public router: Router, public zone: NgZone, public nodeservice: NodeapiService ) { }
 
   ngOnInit() {
@@ -53,6 +54,8 @@ export class HomeComponent implements OnInit {
       if (file) {
 
         this.filepath = file[0]; // first element in the array
+        // this.blocked = true;
+        // this.message = true;
 
         // let tree = new Filetree(this.filepath, path.basename(this.filepath));
 
@@ -99,6 +102,8 @@ export class HomeComponent implements OnInit {
   final_navigation() {
     this.nodeservice.createtree(this.filepath).then(() =>
     {
+
+       this.blocked = false;
        this.navigate(); });
   }
 
