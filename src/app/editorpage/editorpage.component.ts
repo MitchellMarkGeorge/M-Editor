@@ -83,15 +83,28 @@ export class EditorpageComponent implements OnInit {
 
     // console.log(something);
 
-    let options = { lineNumbers: true,
-    //theme: 'darcula',
-    theme: 'material',
+    let options = {
+    lineNumbers: true,
+    theme: 'darcula',
+    //theme: 'material',
     mode: 'javascript',
     autocorrect: true,
-    spellcheck: true
+    spellcheck: true,
+    matchBrackets: true,
+    matchTags: true,
+    autoCloseBrackets: true,
+    showTrailingSpace: true,
+    autoCloseTags: true,
+    showMatchesOnScrollbar: true,
+    smartIndent: true
+
   };
 
     let editor = codemirror(document.getElementById('editor'), options);
+    //editor.focus();
+
+
+
 
 
     // this.final_tree = dirtree(this.project_path);
@@ -100,7 +113,7 @@ export class EditorpageComponent implements OnInit {
 
     //let arr = {data: [this.final_tree]};
 
-    //console.log(this.final_tree);
+    // console.log(this.final_tree);
 
     // this.getDirTree().then(() => {
 

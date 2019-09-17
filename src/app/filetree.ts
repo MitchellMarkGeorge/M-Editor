@@ -41,6 +41,8 @@ export default class Filetree {
 
       //let stat = fs.statSync(file_info.path);
 
+      // make all fs methods async
+
       fs.stat(file_info.path, (err, stat) => {if (stat){
 
         if (stat.isDirectory()) {
