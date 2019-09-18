@@ -52,7 +52,7 @@ export default class Filetree {
         } else if (stat.isFile()) {
           delete file_info.children;
 
-        fs.readFile(file_path, (err, file) => {if (file) { file_info.document = file.toString() }});
+        fs.readFile(file_path, 'utf8',  (err, file) => {if (file) { file_info.document = file; }});
           // file_info.document = data;
         }
 

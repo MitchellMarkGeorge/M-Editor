@@ -11,6 +11,8 @@ src/**/*.js
 !src/karma.conf.js
 *.js.map
 
+/m-editor-win32-x64
+
 # dependencies
 /node_modules
 

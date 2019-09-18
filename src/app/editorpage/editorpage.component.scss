@@ -18,19 +18,24 @@
 // }
 
 .grid{
-  height: 100% ;
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  //max-height: 100%;
 }
 
 
 #toolbar{
   padding: 20px;
   background-color: #23272a;
-  //height: 90px !important;
+  max-height: 70px !important;
+  width: 100%;
 }
 
 #button-col{
 
   text-align: center;
+  width: 100%;
 
   //fix vertical alingnmen
 
@@ -48,6 +53,8 @@ button{
   // display: flex !important;
   // flex-direction: column !important;
   padding: 20px !important;
+  height: 100%;
+  width: 100;
 
   //height: 10000px !important;
 
@@ -66,19 +73,25 @@ button{
 .ui-tree {
 
     color: #ffffff !important;
-    padding: 0.571em 1em !important;
+    //padding: 0.571em 1em !important;
     background-color: #23272a !important;
 
 }
 
 #codeeditor{
   //height: 650px !important;
-  //height: 100%;
+  max-height: 100%;
 }
 
-// .CodeMirror{
-//   height: -webkit-fill-available !important;
-// }
+.CodeMirror{
+  //height: auto !important;
+}
+
+#inner-grid{
+  height: 100%;
+}
+
+
 
 // #tree{
 //   overflow: auto;

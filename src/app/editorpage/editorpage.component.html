@@ -13,27 +13,18 @@
 
   </div>
 
-  <div class="p-col p-col-align-stretch" id="editor-grid">
-    <div class="p-grid">
+  <div class="p-col" id="editor-grid">
+    <div class="p-grid" id="inner-grid">
       <div *ngIf="filetreeVisible" class="p-col-fixed" id="test">
         <div id="tree">
         <p-tree [value]=tree></p-tree>
       </div>
       </div>
-      <div class="p-col p-col-align-stretch" id="codeeditor">
+      <div class="p-col" id="codeeditor">
           <div id="editor"></div>
     </div>
     </div>
 </div>
-
-
-<button pButton type="button" label="Home" routerLink="/"></button>
-
-
-
-
-
-
 </div>
 
 
