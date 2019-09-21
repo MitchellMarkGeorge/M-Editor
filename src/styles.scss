@@ -32,6 +32,9 @@ html, body {
   display: none;
 }
 
+
+
+
 button {
   background-color: #7289da !important;
   border-color: #7289da !important;
@@ -46,3 +49,73 @@ button {
 
 
 }
+
+#editor-grid{
+
+  // display: flex !important;
+  // flex-direction: column !important;
+  //margin: 20px !important;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  //top: 20px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+  //height: 10000px !important;
+
+
+
+  // height: 200px !important;
+
+
+  // might remove padding
+
+}
+
+#inner-grid {
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  // should remove padding and let it take 100% space
+  margin: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#codeeditor {
+  height: 100% !important;
+}
+
+
+
+#editor{
+  height: 100%;
+}
+
+
+.CodeMirror {
+  //height: auto !important;
+  //height: 655px !important;
+  height: 100% !important;
+  //width: 100% !important;
+}
+
+.ui-tree {
+
+  color: #ffffff !important;
+  //padding: 0.571em 1em !important;
+  background-color: #23272a !important;
+  border: none !important;
+  border-color: none !important;
+
+}
+
+

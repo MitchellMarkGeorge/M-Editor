@@ -47,12 +47,12 @@ export default class Filetree {
 
         if (stat.isDirectory()) {
           file_info.children = Filetree.readDir(file_info.path);
-          delete file_info.document;
+
 
         } else if (stat.isFile()) {
-          delete file_info.children;
 
-        fs.readFile(file_path, 'utf8',  (err, file) => {if (file) { file_info.document = file; }});
+
+        fs.readFile(file_path,  (err, file) => {if (file) { file_info.document = file.toString(); }});
           // file_info.document = data;
         }
 

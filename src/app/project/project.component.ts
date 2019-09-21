@@ -59,15 +59,15 @@ export class ProjectComponent implements OnInit {
 
 
 
-        this.showErrorDialog('New Project filed are empty', 'Please try again.');
+        this.showErrorDialog('New Project field is empty', 'Please try again.');
 
 
         return;
         // so it dosent do anything
     }
 
-    this.path = `${os.homedir}/${this.project_name}`;//  USE path.join()
-    //path.join(os.homedir(), this.project_name)
+    //this.path = `${os.homedir}/${this.project_name}`;//  USE path.join()
+    this.path = path.join(os.homedir(), this.project_name);
     // HAVE A PATH FIELS
 
 
@@ -90,8 +90,8 @@ export class ProjectComponent implements OnInit {
 
      // navigate to editor with path param
 
-     this.nodeservice.createFileTree(this.path).then(() => { this.router.navigate(['/editor-page']); });
-
+     // this.nodeservice.createFileTree(this.path).then(() => { this.router.navigate(['/editor-page']); });
+    this.nodeservice.createtree(this.path).then(() => { this.router.navigate(['/editor-page']); });
      // this.router.navigate(['/editor-page']);
   }
 

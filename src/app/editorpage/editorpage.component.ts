@@ -18,6 +18,7 @@ import { Tree } from 'primeng/tree';
 import * as dirtree from 'directory-tree';
 import { NodeapiService } from '../nodeapi.service';
 
+import 'codemirror/addon/hint/anyword-hint.js';
 
 
 
@@ -29,7 +30,7 @@ import { NodeapiService } from '../nodeapi.service';
   styleUrls: ['./editorpage.component.scss']
 })
 export class EditorpageComponent implements OnInit {
-  project_map: any;
+  //project_map: any;
   project_path;
   final_tree: any;
   filetreeVisible: boolean = false;
@@ -96,12 +97,18 @@ export class EditorpageComponent implements OnInit {
     showTrailingSpace: true,
     autoCloseTags: true,
     showMatchesOnScrollbar: true,
-    smartIndent: true
+    smartIndent: true,
+    indentWithTabs: true,
+
 
   };
 
     let editor = codemirror(document.getElementById('editor'), options);
     //editor.focus();
+
+    // uninstall @types/codemirror
+
+
 
 
 
