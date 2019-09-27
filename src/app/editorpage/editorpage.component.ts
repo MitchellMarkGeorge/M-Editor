@@ -72,18 +72,9 @@ export class EditorpageComponent implements OnInit {
 
 
 
-    // monaco editor
 
-    // monaco.editor.create(document.getElementById("container"), {
-    //   // test config
-    //   language: 'javascript',
-    //   theme: 'vs',
-    //   automaticLayout: true
-    // });
 
-    // let something = this.makeFileTree(this.project_path);
 
-    // console.log(something);
     // need to show what file you are on
 
     codemirror.commands.autocomplete = function(cm) {
@@ -94,9 +85,9 @@ export class EditorpageComponent implements OnInit {
     lineNumbers: true,
     //theme: 'one-dark',
     //theme: 'material-darker',
-    //theme: 'darcula',
+    theme: 'darcula',
     // figure out theme
-    mode: 'javascript',
+    //mode: 'javascript',
 
     autocorrect: true,
     spellcheck: true,
@@ -109,15 +100,23 @@ export class EditorpageComponent implements OnInit {
     indentWithTabs: true,
     lineWrapping: true,
     styleActiveLine: true,
-    placeholder: 'Code goes here...;',
+    placeholder: 'Code goes here...',
     keyMap: 'sublime',
-    extraKeys: {"Ctrl-Space": "autocomplete"} // autocomplete!!!
+    extraKeys: {"Ctrl-Space": "autocomplete" , ".": (cm) => {
+      setTimeout(() => {
+        cm.execCommand("autocomplete")
+      }, 100); throw new Error('Neep this error to show to work'); // might also use codemirror.Pass to throw error
+    }} // autocomplete!!!
 
 
   };
 
     this.editor = codemirror(document.getElementById('editor'), options);
     this.editor.focus();
+    // this.editor.on('keyup', (cm) => {
+    //   cm.execCommand('autocomplete');
+
+    // })
 
     // let editor = codemirror.fromTextArea(document.getElementById('area'), options);
 
@@ -188,24 +187,6 @@ export class EditorpageComponent implements OnInit {
 
   }
 
-  arraylabel(array) {
-
-    array.forEach(element => {
-
-      element.label = element.name;
-
-      if (element.children) {
-        this.arraylabel(element.children);
-        element.expandedIcon = 'fa fa-folder-open';
-        element.collapsedIcon = 'fa fa-folder';
-      }
-
-      element.icon = 'fa fa-file-word-o';
-
-    });
-
-
-  }
 
 
   resize() {
@@ -245,7 +226,7 @@ export class EditorpageComponent implements OnInit {
     // this.editor.setOption('mode', this.editor.getOption('mode'));
     // fix requiremode
     this.editor.swapDoc(event.node.document);
-    this.editor.setOption('mode', event.node.mode.mode);
+    this.editor.setOption('mode', event.node.mode.mime);
     this.editor.setOption('mode', this.editor.getOption('mode'));
 
     // setTimeout(() => {
@@ -281,37 +262,14 @@ export class EditorpageComponent implements OnInit {
   }
 
 
-  // makeFileTree(project_path) {
-
-  //   fs.readdir(project_path, (err, files) => {
-  //     if (files) {
-  //       return files.forEach(file => {
-  //         let file_path = path.join(project_path, file);
-  //         fs.stat(file_path, (err, stats) => {
-  //           let fileobj: TreeNode | any = {};
-  //           // fileobj.label = path.basename(file_path);
-  //           fileobj.label = path.basename(file_path);
-  //           fileobj.isDirectory = stats.isDirectory;
-  //           fileobj.path = file_path;
-  //           fileobj.icon = 'fa fa-file';
-  //           if (fileobj.isDirectory) {
-  //             fileobj.icon = 'fa fa-folder';
-  //             fileobj.children = this.makeFileTree(file_path);
-  //           }
-
-  //           //console.log(fileobj);
-  //         });
-  //       });
-
-  //       console.log(files);
-  //     }
-  //   });
-
-
-
-
-
-  // }
+ saveFile(){
+   return;
+   // TODO save file
+   // - get curent codument
+   // - get curent value of that document
+   // - write the contenet of that doc to the corresponding file with a onditon (figure this out (if it is a string))
+   // - show toast saying file has been saved
+ }
 
 
 

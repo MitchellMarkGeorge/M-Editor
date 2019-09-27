@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { AppConfig } from './environments/environment';
 
 // FEATURES
-import 'codemirror/addon/mode/loadmode.js';
+// import 'codemirror/addon/mode/loadmode.js';
 import 'codemirror/lib/codemirror.js';
 import 'codemirror/addon/dialog/dialog.js';
 import 'codemirror/addon/comment/comment.js';
@@ -33,10 +33,26 @@ import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/keymap/sublime.js';
 
 
-// LANGS
+// LANGS/ MODES
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/markdown/markdown';
+import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/mode/markdown/markdown.js';
+import 'codemirror/mode/clike/clike.js';
+import 'codemirror/mode/css/css.js';
+import 'codemirror/mode/dart/dart.js';
+import 'codemirror/mode/xml/xml.js';
+import 'codemirror/mode/sql/sql.js';
+import 'codemirror/mode/gfm/gfm.js';
+import 'codemirror/mode/python/python.js';
+import 'codemirror/mode/sass/sass.js';
+import 'codemirror/mode/handlebars/handlebars.js';
+import 'codemirror//mode/swift/swift.js';
+import 'codemirror/mode/jsx/jsx.js';
+import 'codemirror/mode/php/php.js';
+
+
+// TODO fix require mode fuction in filetree.ts
+
 
 
 

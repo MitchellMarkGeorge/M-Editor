@@ -99,10 +99,10 @@ export default class Filetree {
 
 
             file_info.document = code.Doc(text, file_info.mode);
-            code.modeURL = "node_modules/codemirror/mode/%N/%N.js"
-            code.requireMode(file_info.mode.mode, () => {
-              console.log("done! mode loaded");
-                });
+            // code.modeURL = "node_modules/codemirror/mode/%N/%N.js"
+            // code.requireMode(file_info.mode.mode, () => {
+            //   console.log("done! mode loaded");
+            //     });
 
           } else if (err) {
             console.error(err)
