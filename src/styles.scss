@@ -2,7 +2,13 @@
 @import "~codemirror/lib/codemirror";
 @import "~codemirror/theme/darcula";
 @import "~codemirror/theme/material";
+@import "~codemirror/theme/material-darker";
+@import "~codemirror/theme/idea";
 @import "~codemirror/theme/3024-night";
+@import "~codemirror-one-dark-theme/one-dark";
+@import "~codemirror/addon/hint/show-hint";
+@import "~codemirror/addon/search/matchesonscrollbar";
+
 
 
 
@@ -56,7 +62,7 @@ button {
   // flex-direction: column !important;
   //margin: 20px !important;
   height: 100%;
-  width: 100%;
+  max-width: 100%;
   position: relative;
   //top: 20px;
   left: 0;
@@ -79,6 +85,11 @@ button {
   height: 100%;
   width: 100%;
   padding: 20px;
+
+  //  padding-top: 20px;
+  //  padding-bottom: 20px;
+  //  padding-left: 20px;
+  //figure out spacing
   // should remove padding and let it take 100% space
   margin: 0;
   position: absolute;
@@ -92,6 +103,7 @@ button {
 
 #codeeditor {
   height: 100% !important;
+
 }
 
 
@@ -105,17 +117,24 @@ button {
   //height: auto !important;
   //height: 655px !important;
   height: 100% !important;
+  max-width: 100% !important;
+  //overflow: auto !important;
   //width: 100% !important;
 }
 
 .ui-tree {
 
   color: #ffffff !important;
+  padding: 0 !important;
   //padding: 0.571em 1em !important;
-  background-color: #23272a !important;
+  //background-color: #23272a !important;
+  background-color: #2c2f33 !important;
   border: none !important;
   border-color: none !important;
+}
 
+.ui-tree-container {
+  padding: 0 !important;
 }
 
 

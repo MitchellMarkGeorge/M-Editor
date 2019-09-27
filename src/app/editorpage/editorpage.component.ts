@@ -18,7 +18,7 @@ import { Tree } from 'primeng/tree';
 import * as dirtree from 'directory-tree';
 import { NodeapiService } from '../nodeapi.service';
 
-import 'codemirror/addon/hint/anyword-hint.js';
+
 
 
 
@@ -35,6 +35,7 @@ export class EditorpageComponent implements OnInit {
   final_tree: any;
   filetreeVisible: boolean = false;
   tree = undefined;
+  editor;
 
 
 
@@ -86,25 +87,32 @@ export class EditorpageComponent implements OnInit {
 
     let options = {
     lineNumbers: true,
+    //theme: 'one-dark',
+    //theme: 'material-darker',
     theme: 'darcula',
-    //theme: 'material',
     mode: 'javascript',
+
     autocorrect: true,
     spellcheck: true,
     matchBrackets: true,
     matchTags: true,
     autoCloseBrackets: true,
-    showTrailingSpace: true,
     autoCloseTags: true,
     showMatchesOnScrollbar: true,
     smartIndent: true,
     indentWithTabs: true,
+    lineWrapping: true,
+    styleActiveLine: true,
+    placeholder: 'Code goes here...;',
+    keyMap: 'sublime'
 
 
   };
 
-    let editor = codemirror(document.getElementById('editor'), options);
-    //editor.focus();
+    this.editor = codemirror(document.getElementById('editor'), options);
+    this.editor.focus();
+
+    // let editor = codemirror.fromTextArea(document.getElementById('area'), options);
 
     // uninstall @types/codemirror
 
@@ -223,6 +231,46 @@ export class EditorpageComponent implements OnInit {
 
     console.log(this.final_tree);
 
+  }
+
+  swapDoc(event) {
+    // this.editor.setOption('mode', event.node.mode.mode);
+    // this.editor.setOption('mode', this.editor.getOption('mode'));
+    // fix requiremode
+    this.editor.swapDoc(event.node.document);
+    this.editor.setOption('mode', event.node.mode.mode);
+    this.editor.setOption('mode', this.editor.getOption('mode'));
+
+    // setTimeout(() => {
+    //   this.editor.setOption('mode', event.node.mode.mode);
+    // this.editor.setOption('mode', this.editor.getOption('mode'));
+    // }, 0);
+    // errorhandling???
+    // if undefied, make mode plain text
+    console.log(event.node.document);
+    console.log(event.node);
+    //codemirror.autoLoadMode(this.editor, event.node.mode);
+    console.log(event.node.mode);
+    // app.component.css files dont load
+    // set editor mode
+    // SYNTAX HIGHLIGHTING
+    //  codemirror.requireMode(event.node.mode, () => {
+    //    console.log("done! mode loaded");
+    //  });
+    // should i just support specific languages?????
+    //codemirror.modeURL = "node_modules/codemirror/mode/%N/%N.js"
+
+
+    //this.editor.refresh();
+    // codemirror.modeURL = "./node_modules/codemirror/mode/%N/%N.js"
+    // codemirror.autoLoadMode(this.editor, event.node.mode.mode);
+    // have to tap twice to get syntax highligting ot work
+    console.log(`mode set to ${event.node.mode.mime}`);
+    //codemirror.autoLoadMode(this.editor, event.node.mode.mode);
+
+    // this.editor.setOption('value', event.node.document);
+    // console.log(event.node);
+    // i can also set the value;
   }
 
 

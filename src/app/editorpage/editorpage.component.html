@@ -17,11 +17,12 @@
     <div class="p-grid" id="inner-grid">
       <div *ngIf="filetreeVisible" class="p-col-fixed" id="file-col">
         <div id="tree">
-        <p-tree [value]=tree></p-tree>
+        <p-tree [value]= tree selectionMode="single" (onNodeSelect)="swapDoc($event)"></p-tree>
       </div>
       </div>
       <div class="p-col" id="codeeditor">
           <div id="editor"></div>
+          <!-- <textarea id="area"></textarea> -->
     </div>
     </div>
 </div>
