@@ -8,6 +8,7 @@
 @import "~codemirror-one-dark-theme/one-dark";
 @import "~codemirror/addon/hint/show-hint";
 @import "~codemirror/addon/search/matchesonscrollbar";
+@import "~codemirror/addon/dialog/dialog";
 
 
 
@@ -103,6 +104,7 @@ button {
 
 #codeeditor {
   height: 100% !important;
+  overflow: auto !important;
 
 }
 
@@ -118,6 +120,7 @@ button {
   //height: 655px !important;
   height: 100% !important;
   max-width: 100% !important;
+  overflow: auto !important;
   //overflow: auto !important;
   //width: 100% !important;
 }

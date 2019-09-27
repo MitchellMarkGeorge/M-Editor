@@ -84,12 +84,18 @@ export class EditorpageComponent implements OnInit {
     // let something = this.makeFileTree(this.project_path);
 
     // console.log(something);
+    // need to show what file you are on
+
+    codemirror.commands.autocomplete = function(cm) {
+      cm.showHint({hint: codemirror.hint.anyword});
+    };
 
     let options = {
     lineNumbers: true,
     //theme: 'one-dark',
     //theme: 'material-darker',
-    theme: 'darcula',
+    //theme: 'darcula',
+    // figure out theme
     mode: 'javascript',
 
     autocorrect: true,
@@ -104,7 +110,8 @@ export class EditorpageComponent implements OnInit {
     lineWrapping: true,
     styleActiveLine: true,
     placeholder: 'Code goes here...;',
-    keyMap: 'sublime'
+    keyMap: 'sublime',
+    extraKeys: {"Ctrl-Space": "autocomplete"} // autocomplete!!!
 
 
   };

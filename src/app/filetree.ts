@@ -92,7 +92,7 @@ export default class Filetree {
           file_info.selectable = true;
 
 
-          fs.readFile(file_path,   (err, file) => {
+          fs.readFile(file_path, (err, file) => {
             if (file) { // scss and css files failin here (files with names like app.component.css)
             let text = file.toString();
             file_info.mode = code.findModeByFileName(file_info.label);
@@ -104,7 +104,12 @@ export default class Filetree {
               console.log("done! mode loaded");
                 });
 
-          } else if (err) console.error(err)});
+          } else if (err) {
+            console.error(err)
+
+          }
+
+        });
           // file_info.document = data;
         }
 
