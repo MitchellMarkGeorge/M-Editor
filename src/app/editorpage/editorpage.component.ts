@@ -17,6 +17,7 @@ import { Tree } from 'primeng/tree';
 
 import * as dirtree from 'directory-tree';
 import { NodeapiService } from '../nodeapi.service';
+import {MessageService} from 'primeng/api';
 
 
 
@@ -36,10 +37,11 @@ export class EditorpageComponent implements OnInit {
   filetreeVisible: boolean = false;
   tree = undefined;
   editor;
+  last_opend_file;
 
 
 
-  constructor( public nodeservice: NodeapiService ) { }
+  constructor( public nodeservice: NodeapiService, public message: MessageService ) { }
 
   ngOnInit() {
 
@@ -77,9 +79,17 @@ export class EditorpageComponent implements OnInit {
 
     // need to show what file you are on
 
+
+
     codemirror.commands.autocomplete = function(cm) {
       cm.showHint({hint: codemirror.hint.anyword});
     };
+
+    codemirror.commands.save = () => {
+      this.saveFile();
+    }
+
+
 
     let options = {
     lineNumbers: true,
@@ -98,7 +108,7 @@ export class EditorpageComponent implements OnInit {
     showMatchesOnScrollbar: true,
     smartIndent: true,
     indentWithTabs: true,
-    lineWrapping: true,
+    //lineWrapping: true,
     styleActiveLine: true,
     placeholder: 'Code goes here...',
     keyMap: 'sublime',
@@ -199,16 +209,6 @@ export class EditorpageComponent implements OnInit {
 
     this.filetreeVisible = !this.filetreeVisible;
 
-    // if (this.tree === undefined) {
-    //   console.log('hello');
-    //   this.getDirTree();
-    // }
-
-
-
-
-
-
   }
 
   async getDirTree() {
@@ -225,9 +225,13 @@ export class EditorpageComponent implements OnInit {
     // this.editor.setOption('mode', event.node.mode.mode);
     // this.editor.setOption('mode', this.editor.getOption('mode'));
     // fix requiremode
+    this.last_opend_file = event.node;
     this.editor.swapDoc(event.node.document);
     this.editor.setOption('mode', event.node.mode.mime);
     this.editor.setOption('mode', this.editor.getOption('mode'));
+
+
+
 
     // setTimeout(() => {
     //   this.editor.setOption('mode', event.node.mode.mode);
@@ -262,14 +266,33 @@ export class EditorpageComponent implements OnInit {
   }
 
 
- saveFile(){
-   return;
+ saveFile() {
+
+  let text = this.editor.getDoc().getValue();
+  console.log("have value")
+  console.log(this.last_opend_file);
+  fs.writeFile(this.last_opend_file.path, text, (err) => {
+  if (err) {
+    console.error(err);
+  }
+
+   console.log("written to file");
+   this.successfullFileSave(this.last_opend_file.label);
+   this.last_opend_file.document.clearHistory();
+  });
+
    // TODO save file
    // - get curent codument
    // - get curent value of that document
    // - write the contenet of that doc to the corresponding file with a onditon (figure this out (if it is a string))
    // - show toast saying file has been saved
  }
+
+ successfullFileSave(filename) {
+  this.message.add({severity: 'success', summary:'File Saved', detail: `${filename} saved`});
+ }
+
+
 
 
 

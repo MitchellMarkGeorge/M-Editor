@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { NodeapiService } from './nodeapi.service';
 
 // import 'reflect-metadata';
@@ -29,7 +30,7 @@ import { ProjectComponent } from './project/project.component';
 import { EditorpageComponent } from './editorpage/editorpage.component';
 
 import {TreeModule} from 'primeng/tree';
-import {BlockUIModule} from 'primeng/blockui';
+import {ToastModule} from 'primeng/toast';
 
 
 
@@ -55,12 +56,12 @@ import {BlockUIModule} from 'primeng/blockui';
     InputTextModule,
     DropdownModule,
     TreeModule,
-    BlockUIModule
+    ToastModule
 
 
 
   ],
-  providers: [NodeapiService],
+  providers: [NodeapiService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -15,6 +15,7 @@ function createWindow() {
     width: 900,
     height: 900,
     show: false,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -47,9 +48,14 @@ function createWindow() {
 
   win.once('ready-to-show', () => {
     win.show();
+
   });
 
+
+
 }
+
+
 
 
 
