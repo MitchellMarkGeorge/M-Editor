@@ -12,6 +12,7 @@ src/**/*.js
 *.js.map
 
 /m-editor-win32-x64
+/m-editor-darwin-x64
 
 # dependencies
 /node_modules

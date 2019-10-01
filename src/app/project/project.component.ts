@@ -51,13 +51,6 @@ export class ProjectComponent implements OnInit {
 
     console.log(this.selected_lang);
     if (this.selected_lang === undefined || this.project_name === undefined) {
-        // alert('New Project fields are not filled');
-        // test this condition
-
-        // toast
-
-
-
 
         this.showErrorDialog('New Project field is empty', 'Please try again.');
 
@@ -66,8 +59,8 @@ export class ProjectComponent implements OnInit {
         // so it dosent do anything
     }
 
-    //this.path = `${os.homedir}/${this.project_name}`;//  USE path.join()
-    this.path = path.join(os.homedir(), this.project_name);
+    this.path = `${os.homedir()}/${this.project_name}`;//  USE path.join()
+    //console.log(path.join(os.homedir(), this.project_name));
     // HAVE A PATH FIELS
 
 
@@ -89,7 +82,7 @@ export class ProjectComponent implements OnInit {
 
 
      // navigate to editor with path param
-
+    // FIX NAVIGATION
      // this.nodeservice.createFileTree(this.path).then(() => { this.router.navigate(['/editor-page']); });
     this.nodeservice.createtree(this.path).then(() => { this.router.navigate(['/editor-page']); });
      // this.router.navigate(['/editor-page']);
@@ -110,27 +103,29 @@ export class ProjectComponent implements OnInit {
 
      });
 
+     // fix file not found error
+
      if (this.selected_lang === 'Javascript') {
        fs.writeFileSync(path.resolve(this.path, 'index.js'), 'console.log("Start Programming!")');
        // npm init
 
-      } else if (this.selected_lang === 'Typescript') {
+      } if (this.selected_lang === 'Typescript') {
         fs.writeFileSync(path.resolve(this.path, 'index.ts'), 'console.log("Start Programming!")');
         // npm init -y
         // tsc init
         // npm install --save-dev typescript ??
 
-      } else if (this.selected_lang === 'Java') {
+      } if (this.selected_lang === 'Java') {
         fs.writeFileSync(path.resolve(this.path, 'Hello.java'), 'public class Hello {} ');
 
-      } else if (this.selected_lang === 'Python') {
+      } if (this.selected_lang === 'Python') {
         fs.writeFileSync(path.resolve(this.path, 'hello.py'), 'print("Start Programming")');
 
-      } else if (this.selected_lang === 'C++') {
-        fs.writeFileSync(path.resolve(this.path, 'Hello.cpp'), '');
+      } if (this.selected_lang === 'C++') {
+        fs.writeFileSync(path.resolve(this.path, 'Hello.cpp'), 'int hello = "hello world"');
 
-      } else if (this.selected_lang === 'C#') {
-        fs.writeFileSync(path.resolve(this.path, 'Hello.cs'), '');
+      } if (this.selected_lang === 'C#') {
+        fs.writeFileSync(path.resolve(this.path, 'Hello.cs'), 'int hello = "hello world"');
       }
       // might use async version
     // in that dir, make a file based on the selected language

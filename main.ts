@@ -21,6 +21,10 @@ function createWindow() {
     },
   });
 
+
+
+
+
   if (serve) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
@@ -32,6 +36,8 @@ function createWindow() {
       protocol: 'file:',
       slashes: true
     }));
+
+    
   }
 
   // if (serve) {
