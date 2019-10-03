@@ -25,7 +25,7 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
     "build:2": "npm run postinstall:electron && ng build --prod",
-    "pack-win": "npm run build:2 && electron-packager . M-Editor --platform=win32 --arch=x64 --overwrite",
+    "pack-win": "npm run build:2 && electron-packager . M-Editor --platform=win32 --arch=x64 --overwrite --asar=true",
     "pack-osx": "npm run build:2 && electron-packager . M-Editor --platform=darwin --arch=x64 --overwrite"
 
   },
