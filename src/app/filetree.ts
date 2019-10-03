@@ -38,17 +38,16 @@ export default class Filetree {
 
   static readDir(path) {
     let fileArray = [];
+
     let inital_array = fs.readdirSync(path);
+    console.log(inital_array);
+
+    if (inital_array.length === 0) {
+      console.log('empty arr');
+    }
 
     // dont load node_modules files OR .git (do i need to remove .git???)
     if (inital_array.includes('node_modules')) {
-      // let node_modules_index = inital_array.indexOf('node_modules');
-      // if (node_modules_index !== -1) {
-      //   inital_array.splice(node_modules_index, 1);
-      // }
-
-      // why does removeItem have to be static
-
       this.removeItem(inital_array, 'node_modules');
 
     }
@@ -92,6 +91,7 @@ export default class Filetree {
           file_info.selectable = true;
 
 
+
           fs.readFile(file_path, (err, file) => {
             if (file) { // scss and css files failin here (files with names like app.component.css)
             let text = file.toString();
@@ -105,12 +105,14 @@ export default class Filetree {
             //     });
 
           } else if (err) {
-            console.error(err)
+            console.error(err);
 
           }
 
         });
           // file_info.document = data;
+        } else if(err){
+          console.log(err);
         }
 
         // should i still do this???
@@ -153,6 +155,7 @@ export default class Filetree {
    }
 
   build() {
+    console.log('building')
 
     this.children = Filetree.readDir(this.path);
 

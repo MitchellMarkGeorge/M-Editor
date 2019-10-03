@@ -1,7 +1,7 @@
 import { TreeNode } from 'primeng/api';
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import * as os from 'os';
 import * as path from 'path';
@@ -25,6 +25,7 @@ import {MessageService} from 'primeng/api';
 
 
 
+
 @Component({
   selector: 'app-editorpage',
   templateUrl: './editorpage.component.html',
@@ -41,7 +42,7 @@ export class EditorpageComponent implements OnInit {
 
 
 
-  constructor( public nodeservice: NodeapiService, public message: MessageService ) { }
+  constructor( public nodeservice: NodeapiService, public message: MessageService, public router: Router ) { }
 
   ngOnInit() {
 
@@ -291,6 +292,18 @@ export class EditorpageComponent implements OnInit {
  successfullFileSave(filename) {
   this.message.add({severity: 'success', summary:'File Saved', detail: `${filename} saved`});
  }
+
+ gotoNewProjectPage() {
+   this.router.navigate(['/new-project']);
+
+ }
+
+ gotoHomePage() {
+  this.router.navigate(['/']);
+
+}
+
+
 
 
 

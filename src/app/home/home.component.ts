@@ -102,8 +102,6 @@ export class HomeComponent implements OnInit {
   final_navigation() {
     this.nodeservice.createtree(this.filepath).then(() =>
     {
-
-       this.blocked = false;
        this.navigate(); });
   }
 
