@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "M-Editor",
   "directories": {
     "output": "release/"
   },
@@ -20,13 +20,13 @@
         "!tslint.json"
     ],
   "win": {
-    "icon": "dist",
+    "icon": "dist/assets/M_circle_win.ico",
     "target": [
       "portable"
     ]
   },
   "mac": {
-    "icon": "dist",
+    "icon": "dist/assets/M_circle.icns",
     "target": [
       "dmg"
     ]
