@@ -30,6 +30,7 @@ export default class Filetree {
   document;
   mode;
   selectable;
+  expanded: boolean;
 
 
 
@@ -40,7 +41,7 @@ export default class Filetree {
     let fileArray = [];
 
     let inital_array = fs.readdirSync(path);
-    console.log(inital_array);
+    //console.log(inital_array);
 
     if (inital_array.length === 0) {
       console.log('empty arr');
@@ -66,6 +67,10 @@ export default class Filetree {
 
       this.removeItem(inital_array, '.vscode');
     }
+	
+	if (inital_array.includes('.DS_Store')) {
+	  this.removeItem(inital_array, '.DS_Store');
+	}
 
 
     inital_array.forEach(file => {
@@ -93,7 +98,7 @@ export default class Filetree {
 
 
           fs.readFile(file_path, (err, file) => {
-            if (file) { // scss and css files failin here (files with names like app.component.css)
+            if (file) { 
             let text = file.toString();
             file_info.mode = code.findModeByFileName(file_info.label);
 

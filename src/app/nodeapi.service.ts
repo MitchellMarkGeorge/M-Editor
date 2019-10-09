@@ -63,9 +63,10 @@ export class NodeapiService {
 
   }
 
-  async createtree(path) {
+  createtree(path) {
     this.file_tree = new Filetree(path, path_os.basename(path));
     this.file_tree.build();
+    
   }
 
   returntree() {

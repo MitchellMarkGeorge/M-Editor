@@ -31,6 +31,9 @@ import { EditorpageComponent } from './editorpage/editorpage.component';
 
 import {TreeModule} from 'primeng/tree';
 import {ToastModule} from 'primeng/toast';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import {MenuItem} from 'primeng/api';
+
 
 
 
@@ -56,7 +59,8 @@ import {ToastModule} from 'primeng/toast';
     InputTextModule,
     DropdownModule,
     TreeModule,
-    ToastModule
+    ToastModule,
+    ContextMenuModule
 
 
 

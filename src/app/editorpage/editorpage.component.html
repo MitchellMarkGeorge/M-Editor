@@ -1,4 +1,35 @@
-<p-toast></p-toast>
+<p-toast key="save"></p-toast>
+
+<p-toast key="new_file" position="center" [modal]="true">
+  <ng-template let-message pTemplate="message">
+    <div style="text-align: center; ">
+    <h3>
+      {{message.summary}}
+    </h3>
+    <p>{{message.detail}}</p>
+    <input type="text" required pInputText [(ngModel)]="input" (keydown.enter)="createnewFile()">
+    <button pButton type="button" label="Create" style="margin-right: 20px; margin-top: 20px; margin-bottom: 10px;" (click)="createnewFile()" ></button>
+  </div>
+  
+  </ng-template>
+</p-toast>
+
+
+<p-toast key="new_folder" position="center" [modal]="true">
+  <ng-template let-message pTemplate="message">
+    <div style="text-align: center; ">
+    <h3>
+      {{message.summary}}
+    </h3>
+    <p>{{message.detail}}</p>
+    <input type="text" required pInputText [(ngModel)]="input" (keydown.enter)="createnewFolder()">
+    <button pButton type="button" label="Create" style="margin-right: 20px; margin-top: 20px; margin-bottom: 10px;" (click)="createnewFolder()" ></button>
+  </div>
+  
+  </ng-template>
+</p-toast>
+
+<p-contextMenu #cm [model]="contextMenu"></p-contextMenu>
 
 <div class="p-grid p-dir-col grid" >
   <div class="p-col" id="toolbar">
@@ -6,8 +37,8 @@
         <button pButton type="button" icon="pi pi-play" iconPos="left" label="Run"  ></button>
         <button pButton type="button" icon="pi pi-save" iconPos="left" label="Save" (click)="saveFile()"></button>
         <button pButton type="button" icon="pi pi-folder" iconPos="left" label="Choose Project" (click)="gotoHomePage()" ></button>
-        <!-- <button pButton type="button" icon="pi pi-folder" iconPos="left" label="New Project" (click)="gotoNewProjectPage()"></button> -->
-        <button pButton type="button" icon="pi pi-user" iconPos="left" label="Git Intigration"></button>
+        <button pButton type="button" icon="pi pi-folder" iconPos="left" label="Refresh Filetree" (click)="refreshFiletree()"></button>
+        <button pButton type="button" icon="pi pi-user" iconPos="left" label="Git Intigration" ></button>
 
         <button pButton type="button" icon="pi pi-sitemap" iconPos="left" label="Toggle Filetree" (click)="toggleFiletree()"></button>
 
@@ -20,7 +51,7 @@
     <div class="p-grid" id="inner-grid">
       <div *ngIf="filetreeVisible" class="p-col-fixed" id="file-col">
         <div id="tree">
-        <p-tree [value]= tree selectionMode="single" (onNodeSelect)="swapDoc($event)"></p-tree>
+        <p-tree [(value)]= "tree" selectionMode="single" (onNodeSelect)="swapDoc($event)" [contextMenu]="cm" [filter]="quickfind"></p-tree>
       </div>
       </div>
       <div class="p-col" id="codeeditor">

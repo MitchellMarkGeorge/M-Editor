@@ -54,21 +54,9 @@ export class HomeComponent implements OnInit {
       if (file) {
 
         this.filepath = file[0]; // first element in the array
-        // this.blocked = true;
-        // this.message = true;
 
-        // let tree = new Filetree(this.filepath, path.basename(this.filepath));
-
-        // tree.build();
-
-
-        //console.log(tree);
-
-        // fs.readdir(this.filepath, (err, files) => { if (files) {console.log(files); } });
-
-        // console.log(test);
-
-         this.zone.run(() => { this.final_navigation(); });
+         this.zone.run(() => { this.navigate() });
+         console.log(this.filepath);
 
         // needed to navigate properly - nead to read up about zones in Angular
         console.log({file});
@@ -96,13 +84,13 @@ export class HomeComponent implements OnInit {
   }
 
   navigate() {
-    this.router.navigate(['/editor-page']);
+    this.router.navigate(['/editor-page'], {queryParams: {path: this.filepath}});
   }
 
-  final_navigation() {
-    this.nodeservice.createtree(this.filepath).then(() =>
-    {
-       this.navigate(); });
-  }
+  // final_navigation() {
+  //   this.nodeservice.createtree(this.filepath).then(() =>
+  //   {
+  //      this.navigate(); });
+  // }
 
 }

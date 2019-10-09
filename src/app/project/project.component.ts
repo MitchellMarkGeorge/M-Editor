@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import {SelectItem} from 'primeng/api';
+import { SelectItem, MessageService } from 'primeng/api';
+MessageService
 
 
 import * as fs from 'fs';
@@ -11,6 +12,8 @@ import * as path from 'path';
 import { Router } from '@angular/router';
 import { ElectronService } from '../core/services';
 import { NodeapiService } from '../nodeapi.service';
+import { ThrowStmt } from '@angular/compiler';
+import { throwError } from 'rxjs';
 NgZone
 
 
@@ -24,7 +27,7 @@ NgZone
 export class ProjectComponent implements OnInit {
 
 
-  languages: SelectItem[] = [{label: 'Select Language', value: undefined}, {label: 'Javascript', value: 'Javascript'}, {label: 'Typescript', value: 'Typescript'}, {label: 'Python', value: 'Python'}, {label: 'Java', value: 'Java'}, {label: 'C++', value: 'C++'}, {label: 'C#', value: 'C#'}];
+  languages: SelectItem[] = [{label: 'Select Language', value: undefined}, {label: 'Javascript', value: 'Javascript'}, {label: 'Typescript', value: 'Typescript'}, {label: 'Python', value: 'Python'}, {label: 'Java', value: 'Java'}];
   project_name: string = undefined; // " ";
   selected_lang = undefined;
   path: string;
@@ -41,7 +44,7 @@ export class ProjectComponent implements OnInit {
   // only pass path as query param
 
 
-  constructor(public router: Router, public electron: ElectronService, public nodeservice: NodeapiService, public zone: NgZone) { }
+  constructor(public router: Router, public electron: ElectronService, public nodeservice: NodeapiService, public zone: NgZone, public message: MessageService) { }
 
   ngOnInit() {
 
@@ -56,11 +59,13 @@ export class ProjectComponent implements OnInit {
     //console.log(this.selected_lang);
     if (this.selected_lang === undefined || this.project_name === undefined) {
 
-        this.showErrorDialog('New Project field is empty', 'Please try again.');
+        
         console.log('ok');
+
+        this.message.add({severity: 'error', summary: 'New Project field is empty', detail: "Please try again."});
         // use toasts
 
-        return;
+        
         // so it dosent do anything
     } else {
 
@@ -69,35 +74,28 @@ export class ProjectComponent implements OnInit {
     //this.path = `${process.env.HOME}/${this.project_name}`
     console.log(this.path);
 
-    fs.stat(this.path, (err) => {
-      if (!err) { // if there is no error (should i just check if there is a stst obj)
-        console.log('folder exists'); // show error message
-        this.showErrorDialog('Project Already Exists', 'Try another name for your project.' );
-        return;
-        // use toasts
-      } else if (err.code === 'ENOENT') { // or if there is no stat obj
-        // find best way to handle ENOENT error
+    if(fs.existsSync(this.path)) {
+      this.message.add({severity: 'error', summary: 'Project Already Exists', detail: "Try another name"})
+    } else {
+      this.createfiles()
+      //this.navigate()
+      
 
-        try {
-        console.log('folder dosent exist'); // go ahead and namke files and navigate
-        console.log('here');
-        console.log(this.path);
-        this.createfiles();
+      // navigates to quickly and dosent read directory properly
+      // need to fix
+      setTimeout(() => {
+        this.navigate();
+      }, 0)
 
-        this.zone.run(() => {this.navigate(); });
-
-        } catch (err){
-          console.log(err);
-        }
-
-
+      
         //this.navigate();
+      
+
+      //this.zone.run(() => {this.navigate()})
+      //this.navigate();
+    }
 
 
-
-
-      }
-    });
 
   }
 
@@ -105,7 +103,7 @@ export class ProjectComponent implements OnInit {
 
 navigate() {
 
-  this.nodeservice.createtree(this.path).then(() => { this.router.navigate(['/editor-page']); });
+  this.router.navigate(['/editor-page'], {queryParams: {path: this.path}});
 
 }
 
@@ -148,7 +146,7 @@ navigate() {
    }
 
 
-   createfiles() {
+  createfiles() {
 
     fs.mkdir(this.path, (err) => {
 
@@ -160,35 +158,31 @@ navigate() {
         //fs.openSync(path.resolve(this.path, 'index.js'), 'w');
         //console.log('Javascript')
 
-        fs.writeFile(path.join(this.path, 'index.js'), 'console.log("Start Programming!")', () => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(`file made at ${path.join(this.path, 'index.js')}`);
-          }
+        fs.writeFileSync(path.resolve(this.path, 'index.js'), 'console.log("Start Programming!")');
 
-        });
+        // fs.writeFile(path.resolve(this.path, 'index.js'), 'console.log("Start Programming!")', (err) => {
+        //   if (err){
+        //     console.log(err)
+        //   } else {
+        //     console.log('file done');
+        //   }
+        // } )
 
         // npm init
 
        } else  if (this.selected_lang === 'Typescript') {
-         //fs.writeFileSync(path.resolve(this.path, 'index.ts'), 'console.log("Start Programming!")');
+         fs.writeFileSync(path.resolve(this.path, 'index.ts'), 'console.log("Start Programming!")');
          // npm init -y
          // tsc init
          // npm install --save-dev typescript ??
 
        } else if (this.selected_lang === 'Java') {
-         //fs.writeFileSync(path.resolve(this.path, 'Hello.java'), 'public class Hello {} ');
+         fs.writeFileSync(path.resolve(this.path, 'Hello.java'), 'public class Hello {} ');
 
        } else if (this.selected_lang === 'Python') {
-         //fs.writeFileSync(path.resolve(this.path, 'hello.py'), 'print("Start Programming")');
+         fs.writeFileSync(path.resolve(this.path, 'hello.py'), 'print("Start Programming")');
 
-       } else if (this.selected_lang === 'C++') {
-         //fs.writeFileSync(path.resolve(this.path, 'Hello.cpp'), 'int hello = "hello world"');
-
-       } else if (this.selected_lang === 'C#') {
-         //fs.writeFileSync(path.resolve(this.path, 'Hello.cs'), 'int hello = "hello world"');
-       }
+       } 
 
       }
 

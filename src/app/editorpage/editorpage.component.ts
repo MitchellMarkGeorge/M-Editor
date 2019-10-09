@@ -1,10 +1,15 @@
 import { TreeNode } from 'primeng/api';
+import {MenuItem} from 'primeng/api';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+
+
+
+
 import * as os from 'os';
-import * as path from 'path';
+import * as path_os from 'path';
 import * as fs from 'fs';
 
 import * as process from 'process';
@@ -13,11 +18,15 @@ import * as process from 'process';
 import { remote } from 'electron';
 
 import * as codemirror from 'codemirror';
-import { Tree } from 'primeng/tree';
+
 
 import * as dirtree from 'directory-tree';
 import { NodeapiService } from '../nodeapi.service';
 import {MessageService} from 'primeng/api';
+import Filetree from '../filetree';
+
+
+// should the editor be able to save multiple files at once? (create an array of open files)
 
 
 
@@ -32,31 +41,45 @@ import {MessageService} from 'primeng/api';
   styleUrls: ['./editorpage.component.scss']
 })
 export class EditorpageComponent implements OnInit {
-  //project_map: any;
+  quickfind: boolean = false;
+  project_map: any;
   project_path;
   final_tree: any;
-  filetreeVisible: boolean = false;
+  filetreeVisible: boolean = true;
   tree = undefined;
   editor;
   last_opend_file;
+  contextMenu: MenuItem[] = [
+    {label: 'New File', command: () => {this.newFile()}},
+    {label: 'New Folder', command: () => {this.newFolder()}}
+    
+  ];
+
+  input;
 
 
 
-  constructor( public nodeservice: NodeapiService, public message: MessageService, public router: Router ) { }
+  constructor( public nodeservice: NodeapiService, public message: MessageService, public router: Router, public route: ActivatedRoute, public ref: ChangeDetectorRef ) { }
 
   ngOnInit() {
 
     // resize window
     this.resize();
 
+     
 
-    // this.route.queryParamMap.subscribe( param => {
-    //   this.project_map = param;
-    // });
 
-    // console.log(this.project_path);
+    this.route.queryParams.subscribe( param => {
+      this.project_path = param.path;
+    });
 
-    // this.project_path = this.project_map.params.path;
+    //console.log(this.project_map);
+
+    //this.project_path = this.project_map.params.path;
+
+    this.buildFileTree(this.project_path);
+
+    
 
     // console.table(this.project_path);
 
@@ -66,9 +89,9 @@ export class EditorpageComponent implements OnInit {
 
     // console.log(this.tree);
 
-    this.tree = [this.nodeservice.returntree()];
+    // this.tree = [this.nodeservice.returntree()];
 
-    console.log(this.tree);
+    // console.log(this.tree);
 
 
 
@@ -95,9 +118,10 @@ export class EditorpageComponent implements OnInit {
     let options = {
     lineNumbers: true,
     //theme: 'one-dark',
-    //theme: 'material-darker',
-    theme: 'darcula',
-    // figure out theme
+    theme: 'material-darker',
+    //theme: 'darcula',
+    // FIGURE OUT THEME
+    //FINISH CONTEXT MENU
     //mode: 'javascript',
 
     autocorrect: true,
@@ -109,6 +133,8 @@ export class EditorpageComponent implements OnInit {
     showMatchesOnScrollbar: true,
     smartIndent: true,
     indentWithTabs: true,
+    lint: true,
+    // gutters: ["CodeMirror-lint-markers"],
     //lineWrapping: true,
     styleActiveLine: true,
     placeholder: 'Code goes here...',
@@ -116,22 +142,21 @@ export class EditorpageComponent implements OnInit {
     extraKeys: {"Ctrl-Space": "autocomplete" , ".": (cm) => {
       setTimeout(() => {
         cm.execCommand("autocomplete")
-      }, 100); throw new Error('Neep this error to show to work'); // might also use codemirror.Pass to throw error
+      }, 100); throw new Error('Need this error to show to work'); // might also use codemirror.Pass to throw error
     }} // autocomplete!!!
+	  
+	  // quickfind - "Ctrl-P": () => {this.toggleQuickFind()}
 
 
   };
 
     this.editor = codemirror(document.getElementById('editor'), options);
     this.editor.focus();
-    // this.editor.on('keyup', (cm) => {
-    //   cm.execCommand('autocomplete');
-
-    // })
+   
 
     // let editor = codemirror.fromTextArea(document.getElementById('area'), options);
 
-    // uninstall @types/codemirror
+    
 
 
 
@@ -212,13 +237,12 @@ export class EditorpageComponent implements OnInit {
 
   }
 
-  async getDirTree() {
+  buildFileTree(path) {
 
-    // error here  - figure out why
-
-    this.final_tree = dirtree(this.project_path);
-
-    console.log(this.final_tree);
+    
+    this.tree = new Filetree(path, path_os.basename(path));
+    this.tree.build();
+    this.tree = [this.tree];
 
   }
 
@@ -226,10 +250,14 @@ export class EditorpageComponent implements OnInit {
     // this.editor.setOption('mode', event.node.mode.mode);
     // this.editor.setOption('mode', this.editor.getOption('mode'));
     // fix requiremode
+	
     this.last_opend_file = event.node;
     this.editor.swapDoc(event.node.document);
     this.editor.setOption('mode', event.node.mode.mime);
     this.editor.setOption('mode', this.editor.getOption('mode'));
+	this.editor.focus();
+	
+	// should it focus?
 
 
 
@@ -281,6 +309,8 @@ export class EditorpageComponent implements OnInit {
    this.successfullFileSave(this.last_opend_file.label);
    this.last_opend_file.document.clearHistory();
   });
+   
+   // need to show if a file is saved
 
    // TODO save file
    // - get curent codument
@@ -290,7 +320,7 @@ export class EditorpageComponent implements OnInit {
  }
 
  successfullFileSave(filename) {
-  this.message.add({severity: 'success', summary:'File Saved', detail: `${filename} saved`});
+  this.message.add({key: 'save', severity: 'success', summary:'File Saved', detail: `${filename} saved`});
  }
 
  gotoNewProjectPage() {
@@ -302,6 +332,85 @@ export class EditorpageComponent implements OnInit {
   this.router.navigate(['/']);
 
 }
+
+newFile(){
+  this.message.add({key: 'new_file', sticky: true, severity: 'success', summary:'New File', detail: 'Enter path for new file here:'})
+}
+
+newFolder() {
+  this.message.add({key: 'new_folder', sticky: true, severity: 'success', summary:'New Folder', detail: 'Enter path for new folder:'})
+
+}
+
+createnewFile(){
+  this.message.clear()
+  let path = path_os.resolve(this.project_path, this.input);
+
+  fs.writeFile(path, 'Start Programming', (err) => {
+    if (err){
+      //console.log(err); // create toast unable to make file/ folder
+	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
+	  // need to fix this
+    } else {
+      
+      //this.message.clear()
+      this.refreshFiletree();
+	  this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
+      //this.ref.detectChanges();
+      //this.message.clear()
+      
+      
+    }
+  })
+}
+  
+createnewFolder(){
+  this.message.clear();
+  let path = path_os.resolve(this.project_path, this.input);
+  fs.mkdir(path, (err) => {
+	if (err) {
+	  console.log(err);
+	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
+	} else {
+	  
+	  this.refreshFiletree();
+	  this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} folder made`, detail: 'Reopen filetree to see changes'});
+	  // might not need this message
+	
+	}
+	
+  });
+}
+  
+refreshFiletree(){
+  
+  try{
+  this.buildFileTree(this.project_path);
+  this.ref.markForCheck();
+  
+  for(let node of this.tree) {
+	node.expanded = true;
+  } // so the file tree dosent dosent 'close' (even though it does)
+	// can olo acess through index or array destructuring
+	
+	
+} catch (err) {
+  
+  console.log(err);
+  
+  
+  
+}
+
+}
+  
+toggleQuickFind(){
+  this.quickfind = !this.quickfind;
+}
+
+
+
+// might try to restrict to tree
 
 
 
