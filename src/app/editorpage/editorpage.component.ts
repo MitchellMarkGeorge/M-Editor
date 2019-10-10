@@ -225,7 +225,7 @@ export class EditorpageComponent implements OnInit {
             message: "Are you sure you want to quit M-Editor? There may be some unsaved files.",
             buttons: ["Close"]
         });
-	  return;
+	  
 	})
 
 
