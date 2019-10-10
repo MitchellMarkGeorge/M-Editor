@@ -214,6 +214,19 @@ export class EditorpageComponent implements OnInit {
     // }, 3000);
 
     console.log('done');
+	
+	// show message before app is closed completely
+	
+	let mainWindow = remote.getCurrentWindow();
+	
+	mainWindow.on('close', () => {
+	  let dialog = remote.dialog;
+	  dialog.showMessageBox({
+            message: "Are you sure you want to quit M-Editor? There may be some unsaved files.",
+            buttons: ["Close"]
+        });
+	  return;
+	})
 
 
 
