@@ -10,6 +10,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
+import { remote } from 'electron';
 
 // can i import nodejs modules in like this????
 import { Router } from '@angular/router';
@@ -37,6 +38,25 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
+    // let Menu = remote.Menu;
+    
+    
+    
+
+    // let template = [
+    //   {label: 'Editor', submenu: [
+    //     {label: 'Test'}
+    //   ]}, 
+
+    //   {label: 'Why', submenu: [
+    //     {label: 'hello'}
+    //   ]}
+    // ]
+
+    // let menu = Menu.buildFromTemplate(template);
+    // Menu.setApplicationMenu(menu);
+
+
     //console.log(this.filepath);
 
     // figure out how to show selescted project filepath
@@ -46,7 +66,9 @@ export class HomeComponent implements OnInit {
 
   openFileDialog = () => {
 
-    let dialog = this.electron.remote.dialog;
+    let dialog = remote.dialog;
+
+    
 
     dialog.showOpenDialog({title: 'Choose Project', defaultPath: os.homedir(), properties: ['openDirectory', 'showHiddenFiles']},
 
@@ -63,7 +85,7 @@ export class HomeComponent implements OnInit {
 
 
 
-      }
+      }  // else if (canceled == true) return; // do nothing
     });
   }
 

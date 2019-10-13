@@ -29,30 +29,36 @@
   </ng-template>
 </p-toast>
 
+
+<p-toast position="center" key="remove_comfirm" [modal]="true">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div style="margin-left: 20px !important;">
+          <div>
+              <button type="button" pButton  label="Yes" ></button>
+              <button type="button" pButton label="No" ></button>
+          </div>
+          
+            
+        </div>
+    </ng-template>
+</p-toast>
+
 <p-contextMenu #cm [model]="contextMenu"></p-contextMenu>
 
-<div class="p-grid p-dir-col grid" >
-  <div class="p-col" id="toolbar">
-    <div id="button-col">
-        <button pButton type="button" icon="pi pi-play" iconPos="left" label="Run"  ></button>
-        <button pButton type="button" icon="pi pi-save" iconPos="left" label="Save" (click)="saveFile()"></button>
-        <button pButton type="button" icon="pi pi-folder" iconPos="left" label="Choose Project" (click)="gotoHomePage()" ></button>
-        <button pButton type="button" icon="pi pi-folder" iconPos="left" label="Refresh Filetree" (click)="refreshFiletree()"></button>
-        <button pButton type="button" icon="pi pi-user" iconPos="left" label="Git Intigration" ></button>
-
-        <button pButton type="button" icon="pi pi-sitemap" iconPos="left" label="Toggle Filetree" (click)="toggleFiletree()"></button>
-
-
-    </div>
-
-  </div>
-
-  <div class="p-col" id="editor-grid">
-    <div class="p-grid" id="inner-grid">
-      <div *ngIf="filetreeVisible" class="p-col-fixed" id="file-col">
-        <div id="tree">
-        <p-tree [(value)]= "tree" selectionMode="single" (onNodeSelect)="swapDoc($event)" [contextMenu]="cm" [filter]="quickfind"></p-tree>
-      </div>
+<div class="p-grid p-dir-col grid">
+  <div class="p-col" id="toolbar"></div>
+  <!-- with or without toolbar??? I can use it to make a frameless window -->
+    <div class="p-col" id="editor-grid" #grid>
+      <div class="p-grid" id="inner-grid">
+        <div *ngIf="filetreeVisible" class="p-col-fixed" id="file-col">
+          <div id="tree">
+          <p-tree [(value)]= "tree" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="swapDoc($event)" [contextMenu]="cm" [filter]="quickfind" ></p-tree>
+        </div>
       </div>
       <div class="p-col" id="codeeditor">
           <div id="editor"></div>
@@ -60,6 +66,16 @@
     </div>
     </div>
 </div>
+
+
+
+  <div id="low-bar">
+    <div id="low-bar-center">
+    <p class="low-bar-words">{{current_filename}}</p>
+    <p class="low-bar-words">{{language}}</p>
+    </div>
+  </div>
+
 </div>
 
 

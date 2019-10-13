@@ -1,29 +1,29 @@
-import { TreeNode } from 'primeng/api';
-import {MenuItem} from 'primeng/api';
-
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-
-
-
-
-import * as os from 'os';
-import * as path_os from 'path';
-import * as fs from 'fs';
-
-import * as process from 'process';
-
-
-import { remote } from 'electron';
-
 import * as codemirror from 'codemirror';
-
-
-import * as dirtree from 'directory-tree';
-import { NodeapiService } from '../nodeapi.service';
-import {MessageService} from 'primeng/api';
+import { remote } from 'electron';
+import * as fs from 'fs';
+import * as path_os from 'path';
+import * as child_proccess from 'child_process';
+import { MenuItem, MessageService } from 'primeng/api';
 import Filetree from '../filetree';
+import { NodeapiService } from '../nodeapi.service';
+import * as fs_extra from 'fs-extra';
+
+// NOTES
+// WILL HAVE 2 SEPERATE MENUS
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // should the editor be able to save multiple files at once? (create an array of open files)
@@ -48,20 +48,49 @@ export class EditorpageComponent implements OnInit {
   filetreeVisible: boolean = true;
   tree = undefined;
   editor;
-  last_opend_file;
+  last_opend_file; // variable can be used to access currently opened file/ Filetree object // might rename to current_open_file
   contextMenu: MenuItem[] = [
-    {label: 'New File', command: () => {this.newFile()}},
-    {label: 'New Folder', command: () => {this.newFolder()}}
+    {label: 'New File', command: () => { this.newFile() }},
+    {label: 'New Folder', command: () => { this.newFolder() }},
+    {label: 'Delete', command: () => { this.deleteItem() }}
     
   ];
 
   input;
+  current_filename: string = 'Welcome';
+  language: string;
+  runscript;
+  selectedFile;
+
+
+
 
 
 
   constructor( public nodeservice: NodeapiService, public message: MessageService, public router: Router, public route: ActivatedRoute, public ref: ChangeDetectorRef ) { }
 
   ngOnInit() {
+
+    
+
+    
+
+    // let Menu = remote.Menu;
+    
+    
+
+    // let template = [
+    //   {label: 'Editor', submenu: [
+    //     {label: 'Test'}
+    //   ]}, 
+
+    //   {label: 'Why', submenu: [
+    //     {label: 'hello'}
+    //   ]}
+    // ]
+
+    // let menu = Menu.buildFromTemplate(template);
+    // Menu.setApplicationMenu(menu);
 
     // resize window
     this.resize();
@@ -73,11 +102,19 @@ export class EditorpageComponent implements OnInit {
       this.project_path = param.path;
     });
 
+    console.log(typeof this.project_path);
+
     //console.log(this.project_map);
 
     //this.project_path = this.project_map.params.path;
 
     this.buildFileTree(this.project_path);
+
+    // let last_slash = this.project_path.lastIndexOf('/');
+
+    // if (last_slash !== -1){
+    //   this.project_name = this.project_path.slice(last_slash);
+    // }
 
     
 
@@ -118,8 +155,9 @@ export class EditorpageComponent implements OnInit {
     let options = {
     lineNumbers: true,
     //theme: 'one-dark',
-    theme: 'material-darker',
+    //theme: 'material-darker',
     //theme: 'darcula',
+    theme: 'custom-theme',
     // FIGURE OUT THEME
     //FINISH CONTEXT MENU
     //mode: 'javascript',
@@ -143,15 +181,31 @@ export class EditorpageComponent implements OnInit {
       setTimeout(() => {
         cm.execCommand("autocomplete")
       }, 100); throw new Error('Need this error to show to work'); // might also use codemirror.Pass to throw error
-    }} // autocomplete!!!
+    }, "Ctrl-P": () => {this.toggleQuickFind()}} // autocomplete!!!
 	  
 	  // quickfind - "Ctrl-P": () => {this.toggleQuickFind()}
-
+    // [filter]="true"
 
   };
 
     this.editor = codemirror(document.getElementById('editor'), options);
-    this.editor.focus();
+    //this.editor.focus();
+
+    // Editor events to listen to
+    this.editor.on("change", (cm, changes) => {
+      console.log('content of editor changed')
+      this.last_opend_file.saved = false;
+      // shoud i also say if this.last_opend_file.saved is already false, do nothing?? (return;)
+      // if it is not saved
+      if (!this.last_opend_file.saved) {
+        this.current_filename = `${this.last_opend_file.label} (Unsaved)`;
+      }
+      //this.ref.markForCheck();
+    })
+
+    // this.editor.on("inputRead", (cm, changes) => {
+    //   console.log('input read');
+    // })
    
 
     // let editor = codemirror.fromTextArea(document.getElementById('area'), options);
@@ -213,20 +267,20 @@ export class EditorpageComponent implements OnInit {
     //   this.getDirTree();
     // }, 3000);
 
-    console.log('done');
+    
 	
 	// show message before app is closed completely
 	
-	let mainWindow = remote.getCurrentWindow();
+	// let mainWindow = remote.getCurrentWindow();
 	
-	mainWindow.on('close', () => {
-	  let dialog = remote.dialog;
-	  dialog.showMessageBox({
-            message: "Are you sure you want to quit M-Editor? There may be some unsaved files.",
-            buttons: ["Close"]
-        });
+	// mainWindow.on('close', () => {
+	//   let dialog = remote.dialog;
+	//   dialog.showMessageBox({
+  //           message: "Are you sure you want to quit M-Editor? There may be some unsaved files.",
+  //           buttons: ["Close"]
+  //       });
 	  
-	})
+	// })
 
 
 
@@ -253,9 +307,13 @@ export class EditorpageComponent implements OnInit {
   buildFileTree(path) {
 
     
+
+    
     this.tree = new Filetree(path, path_os.basename(path));
     this.tree.build();
     this.tree = [this.tree];
+
+    console.log(this.tree)
 
   }
 
@@ -263,12 +321,27 @@ export class EditorpageComponent implements OnInit {
     // this.editor.setOption('mode', event.node.mode.mode);
     // this.editor.setOption('mode', this.editor.getOption('mode'));
     // fix requiremode
-	
+    //this.editor.focus();
+    //console.log(event.node);
     this.last_opend_file = event.node;
     this.editor.swapDoc(event.node.document);
+    if (!event.node.saved) {
+      this.current_filename = `${event.node.label} (Unsaved)`;
+    } else{
+      this.current_filename = event.node.label;
+    }
+    if (event.node.mode){
+      this.language = event.node.mode.name;
+    } else {
+      this.language = 'Plain Text' // Language is undefined??? None??? Lang not supported
+    }
+    
     this.editor.setOption('mode', event.node.mode.mime);
     this.editor.setOption('mode', this.editor.getOption('mode'));
-	this.editor.focus();
+    
+    
+    //this.ref.markForCheck()
+	  
 	
 	// should it focus?
 
@@ -309,19 +382,31 @@ export class EditorpageComponent implements OnInit {
 
 
  saveFile() {
+  // if a file is opend
+  if (this.last_opend_file){
 
   let text = this.editor.getDoc().getValue();
   console.log("have value")
-  console.log(this.last_opend_file);
+  //console.log(this.last_opend_file);
   fs.writeFile(this.last_opend_file.path, text, (err) => {
   if (err) {
-    console.error(err);
+    this.message.add({key: 'save', severity: 'error', summary: 'Unable to save file', detail: 'Try again.'});
   }
 
+   this.last_opend_file.saved = true;
+
+  // if the string ends with the unsaved flag, remove it as the file has now been saved
+   if (this.current_filename.endsWith('(Unsaved)')) {
+     this.current_filename = this.current_filename.replace('(Unsaved)', '');
+   }
    console.log("written to file");
-   this.successfullFileSave(this.last_opend_file.label);
+   this.successfullFileSaveToast(this.last_opend_file.label);
    this.last_opend_file.document.clearHistory();
   });
+  } else {
+     return;
+  }
+
    
    // need to show if a file is saved
 
@@ -332,14 +417,11 @@ export class EditorpageComponent implements OnInit {
    // - show toast saying file has been saved
  }
 
- successfullFileSave(filename) {
+ successfullFileSaveToast(filename) {
   this.message.add({key: 'save', severity: 'success', summary:'File Saved', detail: `${filename} saved`});
  }
 
- gotoNewProjectPage() {
-   this.router.navigate(['/new-project']);
 
- }
 
  gotoHomePage() {
   this.router.navigate(['/']);
@@ -356,21 +438,33 @@ newFolder() {
 }
 
 createnewFile(){
+
+  
   this.message.clear()
+  
   let path = path_os.resolve(this.project_path, this.input);
+
+  if (fs.existsSync(path)){
+    this.message.add({key: 'save', severity: 'error', summary: ` ${this.input} file already exists in this project`, detail: 'Try another name.'})
+    return;
+  }
 
   fs.writeFile(path, 'Start Programming', (err) => {
     if (err){
       //console.log(err); // create toast unable to make file/ folder
 	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
-	  // need to fix this
+    // need to fix this
+    
     } else {
+
+    
       
-      //this.message.clear()
       this.refreshFiletree();
-	  this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
+	    this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
       //this.ref.detectChanges();
       //this.message.clear()
+      //this.editor.focus();
+      //this.gridField.nativeElement.focus();
       
       
     }
@@ -379,6 +473,7 @@ createnewFile(){
   
 createnewFolder(){
   this.message.clear();
+  this.editor.focus();
   let path = path_os.resolve(this.project_path, this.input);
   fs.mkdir(path, (err) => {
 	if (err) {
@@ -386,9 +481,10 @@ createnewFolder(){
 	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
 	} else {
 	  
-	  this.refreshFiletree();
+	  this.refreshFiletree()
 	  this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} folder made`, detail: 'Reopen filetree to see changes'});
-	  // might not need this message
+    // might not need this message
+    //this.editor.focus();
 	
 	}
 	
@@ -396,8 +492,7 @@ createnewFolder(){
 }
   
 refreshFiletree(){
-  
-  try{
+
   this.buildFileTree(this.project_path);
   this.ref.markForCheck();
   
@@ -405,21 +500,24 @@ refreshFiletree(){
 	node.expanded = true;
   } // so the file tree dosent dosent 'close' (even though it does)
 	// can olo acess through index or array destructuring
-	
-	
-} catch (err) {
-  
-  console.log(err);
-  
-  
-  
-}
-
+  this.editor.focus();
 }
   
 toggleQuickFind(){
   this.quickfind = !this.quickfind;
 }
+
+runproject() {
+
+}
+
+deleteItem() {
+
+  this.message.add({key: 'remove_comfirm', severity: 'warn',  summary: 'Are you sure you wan to delete this?', detail: 'Please comfirm below.'})
+// severity: 'warn',
+}
+
+
 
 
 

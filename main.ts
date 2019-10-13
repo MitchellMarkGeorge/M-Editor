@@ -16,9 +16,11 @@ function createWindow() {
     height: 900,
     show: false,
     autoHideMenuBar: true,
+    backgroundColor: '#21252b',
     webPreferences: {
       nodeIntegration: true,
     },
+    // frame: false
   });
 
 

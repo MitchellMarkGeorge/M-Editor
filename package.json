@@ -51,7 +51,7 @@
     "codelyzer": "5.1.0",
     "conventional-changelog-cli": "2.0.21",
     "core-js": "3.1.3",
-    "electron": "^6.0.11",
+    "electron": "^6.0.12",
     "electron-builder": "^21.2.0",
     "electron-packager": "^14.0.6",
     "electron-prebuilt-compile": "5.0.10",
@@ -83,6 +83,7 @@
     "codemirror": "^5.49.0",
     "codemirror-one-dark-theme": "^1.1.1",
     "directory-tree": "^2.2.4",
+    "fs-extra": "^8.1.0",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^2.0.0",
     "primeng": "^8.0.2"

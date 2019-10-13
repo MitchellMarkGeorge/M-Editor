@@ -16,21 +16,28 @@ export default class Filetree {
 
 
 
-  constructor(path, name = null) {
+  constructor(path, name = null, selectable = false) {
     this.path = path;
     this.label = name;
     this.children = [];
+    this.selectable = selectable;
+    this.key;
+    this.saved = true;
+    // would rather use numbers
 
 
   }
 
   path: string;
   label: string;
-  children;
+  children: Filetree[];
   document;
   mode;
   selectable;
   expanded: boolean;
+  key;
+  saved: boolean;
+  // would rather use numbers
 
 
 
@@ -40,8 +47,19 @@ export default class Filetree {
   static readDir(path) {
     let fileArray = [];
 
+    let meditor_config_path = path_os.join(path, 'm-editor.json')
+
+    if(!fs.existsSync(meditor_config_path)) {
+
+      try {
+      fs.writeFileSync(meditor_config_path, '{\n\t"runscript": "the script you want the editor to run to start your project."\n}')
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     let inital_array = fs.readdirSync(path);
-    //console.log(inital_array);
+    console.log(inital_array);
 
     if (inital_array.length === 0) {
       console.log('empty arr');
@@ -67,6 +85,8 @@ export default class Filetree {
 
       this.removeItem(inital_array, '.vscode');
     }
+
+    
 	
 	if (inital_array.includes('.DS_Store')) {
 	  this.removeItem(inital_array, '.DS_Store');
@@ -87,6 +107,7 @@ export default class Filetree {
 
           file_info.children = Filetree.readDir(file_info.path);
           file_info.selectable = false;
+          file_info.key = file_info.label
 
 
         } else if (stat.isFile()) {
@@ -94,6 +115,8 @@ export default class Filetree {
           delete file_info.children;
 
           file_info.selectable = true;
+          file_info.key = file_info.path;
+          // i could also use label (i can have some files with the same name)
 
 
 

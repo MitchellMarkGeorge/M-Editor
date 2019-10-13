@@ -1,0 +1,80 @@
+.cm-s-custom-theme {
+
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 16px;
+
+    /* font color */
+    color: #abb2bf !important;
+    /* background color */
+    background-color: #2c2f33;
+
+}
+
+.cm-s-custom-theme.CodeMirror {
+    /* background color and font color*/
+    color: #abb2bf !important;
+    background-color: #282b33;
+}
+
+
+
+
+.cm-s-custom-theme .CodeMirror-linenumber,
+.cm-s-custom-theme .CodeMirror-linenumbers {
+    /* line numbers */
+    color: #5c6370 !important;
+    background-color: transparent;
+} 
+
+.cm-s-custom-theme .CodeMirror-lines {
+    color: #abb2bf !important;
+    background-color: transparent;
+  }
+
+.cm-s-custom-theme .CodeMirror-gutter,
+.cm-s-custom-theme .CodeMirror-gutters {
+    /* gutters */
+    border: none;
+    background-color: #282b33;
+}
+
+.cm-s-custom-theme .CodeMirror-selected {
+    background-color: #3e4451;
+}  
+
+/* For matching take vscode for example  */
+/* Look at addons and their classes */
+
+.cm-s-custom-theme .CodeMirror-cursor {
+    /* border-left: 2.5px solid #528bff !important; */
+    border-left: 2px solid #528bff !important; 
+    /* originally 2px - can make it thicker */ 
+}
+
+.cm-s-custom-theme .CodeMirror-matchingbracket {
+    /* outline:1px solid grey; */
+    outline: 1px solid #888888 !important;
+    color: #abb2bf !important; 
+}
+
+.cm-s-custom-theme .CodeMirror-nonmatchingbracket {
+    border-bottom: 1px dotted #d37266; 
+    color: #abb2bf !important; 
+    background-color: transparent;
+    /* might make solid line */
+
+    /* text-decoration: underline;
+    text-decoration-style:  wavy #d37266; */
+
+    
+}
+
+.cm-s-custom-theme .CodeMirror-activeline-background {
+    background-color: #2c313a;
+}
+
+
+
+
+
+

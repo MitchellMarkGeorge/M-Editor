@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
+
+ 
+
+
+import { Component, OnInit } from '@angular/core';
 import { ElectronService } from './core/services';
+import { remote } from 'electron';
+
 
 
 @Component({
@@ -7,7 +13,7 @@ import { ElectronService } from './core/services';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor( public electronService: ElectronService ) {
 
 
@@ -19,5 +25,10 @@ export class AppComponent {
     } else {
       console.log('Mode web');
     }
+  }
+
+  ngOnInit () {
+
+    
   }
 }
