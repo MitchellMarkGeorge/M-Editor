@@ -9,14 +9,18 @@ import { MenuItem, MessageService } from 'primeng/api';
 import Filetree from '../filetree';
 import { NodeapiService } from '../nodeapi.service';
 import * as fs_extra from 'fs-extra';
+import * as os from 'os';
 
 // NOTES
 // WILL HAVE 2 SEPERATE MENUS
+// might reduce file size
 
 
 
 
+// amke modals stay open until dismissed
 
+// make methods conditional (work based on specific conditons)
 
 
 
@@ -48,19 +52,30 @@ export class EditorpageComponent implements OnInit {
   filetreeVisible: boolean = true;
   tree = undefined;
   editor;
-  last_opend_file; // variable can be used to access currently opened file/ Filetree object // might rename to current_open_file
+  last_opend_file = undefined; // variable can be used to access currently opened file/ Filetree object // might rename to current_open_file
   contextMenu: MenuItem[] = [
     {label: 'New File', command: () => { this.newFile() }},
     {label: 'New Folder', command: () => { this.newFolder() }},
-    {label: 'Delete', command: () => { this.deleteItem() }}
+    {label: 'Delete', command: () => { this.deleteItem() }},
+    {label: 'Refresh FileTree', command: () => { this.refreshFiletree() }},
+    {label: 'Rename', command: () => { this.renameModal() }},
+    {label: 'Generate M-Editor Config File', command: () => { this.generateM_EditorFile() }},
+    {label: 'Run Project', command: () => { this.runproject() }}
+    // rename
+    // Refresh File tree
+    // add files to git
+    // commit fles to git
+    // install simple-git
     
   ];
 
   input;
-  current_filename: string = 'Welcome';
+  current_filename: string = 'Welcome! Select a file to begin.';
   language: string;
   runscript;
   selectedFile;
+  inital_tree;
+  //m_editor_cofig_path = path_os.join(this.project_path, 'm-editor.json');
 
 
 
@@ -70,6 +85,8 @@ export class EditorpageComponent implements OnInit {
   constructor( public nodeservice: NodeapiService, public message: MessageService, public router: Router, public route: ActivatedRoute, public ref: ChangeDetectorRef ) { }
 
   ngOnInit() {
+
+    
 
     
 
@@ -93,7 +110,7 @@ export class EditorpageComponent implements OnInit {
     // Menu.setApplicationMenu(menu);
 
     // resize window
-    this.resize();
+    
 
      
 
@@ -171,11 +188,12 @@ export class EditorpageComponent implements OnInit {
     showMatchesOnScrollbar: true,
     smartIndent: true,
     indentWithTabs: true,
-    lint: true,
+    hintOptions: {completeSingle: false},
+    //lint: true,
     // gutters: ["CodeMirror-lint-markers"],
     //lineWrapping: true,
     styleActiveLine: true,
-    placeholder: 'Code goes here...',
+    //placeholder: 'Code goes here...',
     keyMap: 'sublime',
     extraKeys: {"Ctrl-Space": "autocomplete" , ".": (cm) => {
       setTimeout(() => {
@@ -192,16 +210,26 @@ export class EditorpageComponent implements OnInit {
     //this.editor.focus();
 
     // Editor events to listen to
+
+    // will need to change this event
+    // might listen to event on only soecific document when swapDoc is called
     this.editor.on("change", (cm, changes) => {
       console.log('content of editor changed')
+
+      if (this.last_opend_file === undefined) {
+        return;
+      }
       this.last_opend_file.saved = false;
       // shoud i also say if this.last_opend_file.saved is already false, do nothing?? (return;)
-      // if it is not saved
+      // if it is not saved (it == false)
       if (!this.last_opend_file.saved) {
         this.current_filename = `${this.last_opend_file.label} (Unsaved)`;
       }
       //this.ref.markForCheck();
     })
+
+  
+  
 
     // this.editor.on("inputRead", (cm, changes) => {
     //   console.log('input read');
@@ -280,7 +308,9 @@ export class EditorpageComponent implements OnInit {
   //           buttons: ["Close"]
   //       });
 	  
-	// })
+  // })
+  
+  this.resize();
 
 
 
@@ -308,21 +338,42 @@ export class EditorpageComponent implements OnInit {
 
     
 
-    
+    // might use inital tree and make this.tree an array of that object
     this.tree = new Filetree(path, path_os.basename(path));
     this.tree.build();
+    console.log(this.tree)
     this.tree = [this.tree];
 
-    console.log(this.tree)
+    // for(let node of this.tree) {
+    //   node.expanded = true;
+    // }
+
+    // if (this.input !== undefined) {
+    //   let path = path_os.join(this.project_path, this.input);
+    //   console.log(this.inital_tree.children.length)
+
+    //   console.log(this.getFileObject(path, [{path: path}]))
+    // }
+
+    console.log(this.tree[0].children)
+
+    console.log(this.tree);
+    //console.log(this.tree.flat())
 
   }
 
   swapDoc(event) {
+   
     // this.editor.setOption('mode', event.node.mode.mode);
     // this.editor.setOption('mode', this.editor.getOption('mode'));
     // fix requiremode
     //this.editor.focus();
     //console.log(event.node);
+
+    //console.log(this.selectedFile);
+
+    // might listen to event on only soecific document when swapDoc is called
+
     this.last_opend_file = event.node;
     this.editor.swapDoc(event.node.document);
     if (!event.node.saved) {
@@ -415,15 +466,15 @@ export class EditorpageComponent implements OnInit {
    // - get curent value of that document
    // - write the contenet of that doc to the corresponding file with a onditon (figure this out (if it is a string))
    // - show toast saying file has been saved
- }
+}
 
- successfullFileSaveToast(filename) {
+successfullFileSaveToast(filename) {
   this.message.add({key: 'save', severity: 'success', summary:'File Saved', detail: `${filename} saved`});
- }
+}
 
 
 
- gotoHomePage() {
+gotoHomePage() {
   this.router.navigate(['/']);
 
 }
@@ -449,26 +500,52 @@ createnewFile(){
     return;
   }
 
-  fs.writeFile(path, 'Start Programming', (err) => {
-    if (err){
+  try {
+    fs.writeFileSync(path, '')
+  } catch {
+
+    this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'})
+
+  }
+    
       //console.log(err); // create toast unable to make file/ folder
-	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
+	  //this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
     // need to fix this
     
-    } else {
+   
 
     
       
       this.refreshFiletree();
-	    this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
+      this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
+      
+      // figure out why this happens - might change to sync methods
+      // setTimeout (() => {
+      //   let file_object = this.getFileObject(path, this.tree[0].children)
+      //   console.log(file_object);
+      //   this.swapDocFileObject(file_object);
+      //   this.selectedFile = file_object;
+      //   this.input = '';
+      // }, 250)
+
+      
+
+      
+      //this.selectedFile 
+      //this.swapDocFileObject(file_object);
+
+      
+      //setTimeout(() => {
+      //console.log(this.getFileObject(path, this.inital_tree.children))
+       //}, 15000);
       //this.ref.detectChanges();
       //this.message.clear()
       //this.editor.focus();
       //this.gridField.nativeElement.focus();
       
       
-    }
-  })
+    
+
 }
   
 createnewFolder(){
@@ -481,10 +558,13 @@ createnewFolder(){
 	  this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'});
 	} else {
 	  
-	  this.refreshFiletree()
+    this.refreshFiletree()
+    
 	  this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} folder made`, detail: 'Reopen filetree to see changes'});
     // might not need this message
     //this.editor.focus();
+
+    this.input = '';
 	
 	}
 	
@@ -499,8 +579,11 @@ refreshFiletree(){
   for(let node of this.tree) {
 	node.expanded = true;
   } // so the file tree dosent dosent 'close' (even though it does)
-	// can olo acess through index or array destructuring
-  this.editor.focus();
+  // can olo acess through index or array destructuring
+  
+  // so the editor is not affected - figure this out
+  setTimeout(() => {this.editor.focus();}, 0)
+  //this.editor.focus();
 }
   
 toggleQuickFind(){
@@ -508,20 +591,253 @@ toggleQuickFind(){
 }
 
 runproject() {
+  let m_editor_cofig_path = path_os.join(this.project_path, 'm-editor.json');
+  // check for M-Editor config file
+
+  if (!fs.existsSync(m_editor_cofig_path)) {
+    //return; // toat alerting there is no m-editor.json file
+    console.log('m-editor file does not exists')
+  } else {
+    fs_extra.readJson(m_editor_cofig_path, (err, object) => {
+      if (object) {
+        console.log(object);
+        console.log(object.runscript);
+        this.runscript = object.runscript;
+        this.executeRunCommand();
+
+      } else if (err) {
+        console.log(err) // err toast - coudnt read m_editor file
+      }
+    })
+  }
+  // check if runscript variable has content
+  // read file and execute content
+  // Decide if i am using an indeditor terminal or opening an new terminal window
+
+}
+
+executeRunCommand() {
+
+  if (!this.runscript) {
+    return; // toast aleting there is no runscript, try again
+  } else {
+    if (os.platform() == 'darwin') {
+      console.log('MacOS');
+      // REMEMBER - cd into project directory befor executing command
+      // For mac, write Appscript scriot to do work (look at stack overflow)
+      // Change cdm
+      let cdm = [
+        `osascript -e 'tell application "Terminal" to activate'`, 
+        `-e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down'`, 
+        `-e 'tell application "Terminal" to do script "cd ${this.project_path} && ${this.runscript}" in selected tab of the front window'`
+      ].join(" "); // might look into alternate way to do this
+      child_proccess.exec(cdm, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`${this.runscript} script is running...`);
+        }
+      })
+    } else if (os.platform() == 'win32') {
+      console.log('Windows OS')
+      let cdm = `start cmd.exe /K cd ${this.project_path} && ${this.runscript}`;
+      child_proccess.exec(cdm, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`${this.runscript} script is running...`);
+        }
+      })
+    } else {
+      return; // platform is not supported
+    }
+  }
+
+
 
 }
 
 deleteItem() {
 
-  this.message.add({key: 'remove_comfirm', severity: 'warn',  summary: 'Are you sure you wan to delete this?', detail: 'Please comfirm below.'})
+  this.message.add({key: 'remove_comfirm', severity: 'warn',  summary: 'Are you sure you want to delete this?', detail: 'Please comfirm below.'})
 // severity: 'warn',
+}
+// switch from liniear search to binary seach algorithm
+// figure out search algorithms
+getFileObject(file_path, tree) {
+  console.log('here');
+  console.log(file_path)
+  //console.log(tree);
+
+  let no_dir_array = tree.filter((items) => !items.children)
+  let dir_array =  tree.filter((items) => items.children)
+  if (tree.length === 0) {console.log('empty')} else {console.log('not empty')}
+
+  for (let file of no_dir_array) {
+    if (file_path == file.path) {
+      console.log('match made');
+      return file;
+    } else {
+      for (let element of dir_array) {
+        console.log('going in')
+        for (let items of element.children) {
+          if (file_path == items.path) {
+            console.log('match made');
+            return items;
+          } //else {
+          //   if (items.children) {
+          //     return this.getFileObject(file_path, items.children);
+          //   }
+          // } 
+        }
+      }
+    }
+  }
+
+  
+  // for (let element of tree) {
+  //   console.log(element, file_path)
+  //   if (file_path == element.path) {
+  //     console.log('match made')
+  //     //console.log(element.children)
+  //     return element;
+  //    } //else if (element.children && element.children.length !== 0) {
+
+    //   console.log('moving on')
+    //   //console.log(element.path)
+    //   //console.log(element.children)
+    //   return this.getFileObject(file_path, element.children);
+    //  
+
+      
+    //   // console.log('moving on')
+    //   // console.log(element.path)
+    //   // console.log(element.children)
+    //   // this.getFileObject(file_path, element.children);
+    // }
+    //}
+    
+  
+
+
+
+}
+
+// might add notification saying navigated to new file
+swapDocFileObject(object) {
+
+  console.log('tyring to swap doc')
+
+  console.log(object)
+
+  console.log(object.saved)
+
+  this.last_opend_file = object;
+
+  for (let key in object) {
+    if (key === undefined) {
+      console.log(`${key} is undefined`);
+    }
+  }
+
+  
+  this.editor.swapDoc(object.document);
+ 
+  //this.editor.swapDoc(object.document);
+
+  // console.log(object.parent)
+  // if (object.parent) {
+  //   object.parent.expanded = true;
+  // }
+  console.log(object.document)
+  if (!object.saved) {
+      this.current_filename = `${object.label} (Unsaved)`;
+    } else{
+      this.current_filename = object.label;
+    }
+    if (object.mode){
+      this.language = object.mode.name;
+    } else {
+      this.language = 'Plain Text' // Language is undefined??? None??? Lang not supported
+    }
+    
+    this.editor.setOption('mode', object.mode.mime);
+    this.editor.setOption('mode', this.editor.getOption('mode'));
+
+    // if (object.parent) {
+    //   object.parent.expanded = true;
+    // }
+
+}
+
+removeItem(object) {
+
+  this.message.clear();
+
+  try {
+    fs_extra.removeSync(object.path);
+  } catch (err) {
+    console.error(err);
+    // error toast
+  }
+
+  this.message.add({key: 'save', severity: 'success', summary: `${object.label} has been removed sucessfully`, detail: 'Check filetree for changes.'});
+  this.refreshFiletree();
+  this.input = '';
+
+}
+
+closeModal() {
+  this.message.clear();
+}
+
+renameModal() {
+  this.message.add({key: 'rename', severity: 'success', summary: 'Enter what you want to rename item to:', detail: `Renaming: ${this.selectedFile.label}`})
+}
+
+renameItem(object) {
+  this.message.clear();
+  let new_path = path_os.join(this.project_path, this.input);
+  try {
+    if (fs.existsSync(new_path)) {
+      this.message.add({key: 'save', severity: 'error', summary: ` ${this.input} file already exists in this project`, detail: 'Try another name.'})
+      return;
+    }
+    fs.renameSync(object.path, new_path);
+  } catch (err) {
+    console.error(err);
+
+    // should not be able to rename to a file that already exists
+  }
+   console.log('item renamed'); 
+   this.message.add({key: 'save', severity: 'success', summary: `${object.label} has been renamed sucessfully`, detail: 'Check filetree for changes.'});
+   this.refreshFiletree();
+   this.input = '';
+
+}
+
+generateM_EditorFile() {
+  let m_editor_cofig_path = path_os.join(this.project_path, 'm-editor.json');
+
+  try {
+    if (fs.existsSync(m_editor_cofig_path)) {
+      return; // show toast saying alredy exists
+    }
+
+    fs.writeFileSync(m_editor_cofig_path, '{\n\t"runscript": "the script you want the editor to run to start your project."\n}')
+  } catch (err) {
+    console.log(err); // error toast
+  }
+
+  this.refreshFiletree();
+  this.message.add({key: 'save', severity: 'success', summary: `M-Editor Config file made`, detail: 'Reopen filetree to see changes'});
 }
 
 
 
 
 
-// might try to restrict to tree
+
 
 
 

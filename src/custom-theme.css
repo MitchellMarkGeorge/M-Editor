@@ -14,6 +14,8 @@
     /* background color and font color*/
     color: #abb2bf !important;
     background-color: #282b33;
+    /* padding-top: 20px !important; */
+    /* might use this */
 }
 
 
@@ -24,6 +26,8 @@
     /* line numbers */
     color: #5c6370 !important;
     background-color: transparent;
+    /* padding-right: 10px !important; */
+    /* might remove padding */
 } 
 
 .cm-s-custom-theme .CodeMirror-lines {
@@ -44,13 +48,15 @@
 
 /* For matching take vscode for example  */
 /* Look at addons and their classes */
-
+/* work on these */
 .cm-s-custom-theme .CodeMirror-cursor {
     /* border-left: 2.5px solid #528bff !important; */
-    border-left: 2px solid #528bff !important; 
+    /* border-left: 1px solid #528bff !important; 
+    border-right: 1px solid #528bff !important;  */
+    border-color: #528bff !important;
     /* originally 2px - can make it thicker */ 
 }
-
+/* work on these */
 .cm-s-custom-theme .CodeMirror-matchingbracket {
     /* outline:1px solid grey; */
     outline: 1px solid #888888 !important;
@@ -58,8 +64,8 @@
 }
 
 .cm-s-custom-theme .CodeMirror-nonmatchingbracket {
-    border-bottom: 1px dotted #d37266; 
-    color: #abb2bf !important; 
+    /* border-bottom: 1px dotted #d37266;  */
+    color: red !important; 
     background-color: transparent;
     /* might make solid line */
 
@@ -72,6 +78,139 @@
 .cm-s-custom-theme .CodeMirror-activeline-background {
     background-color: #2c313a;
 }
+
+/* BASIC SYNTAX */
+
+.cm-s-custom-theme .cm-comment {
+    color: #5c6370;
+    font-style: italic;
+}
+
+.cm-s-custom-theme .cm-string  {
+    color: #98c379;
+}
+
+.cm-s-custom-theme .cm-string-2  {
+    color: #98c379;
+}
+
+.cm-s-custom-theme .cm-keyword {
+    color: #c678dd;
+}
+
+.cm-s-custom-theme .cm-type {
+    color: #e5c07b;
+}
+
+/* work on this */
+.cm-s-custom-theme .cm-def {
+    color: #d37266;
+}
+
+.cm-s-custom-theme .cm-operator {
+    color: #56b6c2;
+}
+
+/* work on this */
+.cm-s-custom-theme .cm-property {
+    color: #61afef;
+}
+
+.cm-s-custom-theme .cm-atom {
+    color: #d19a66;
+}
+
+.cm-s-custom-theme .cm-variable {
+    /* color: #61afef; */
+    color: #e06c75;
+}
+
+.cm-s-custom-theme .cm-variable-2 {
+    color: #e06c75;
+}
+
+.cm-s-custom-theme .cm-variable-3 {
+    color: #e06c75;
+}
+
+.cm-s-custom-theme .cm-tag {
+    color: #e06c75;
+}
+
+.cm-s-custom-theme .cm-bracket {
+    color: #abb2bf;
+}
+
+.cm-s-custom-theme .cm-punctuation {
+    color: #abb2bf;
+}
+
+.cm-s-custom-theme .cm-attribute {
+    color: #d19a66;
+}
+
+.cm-s-custom-theme .CodeMirror-matchingtag {
+    background-color: #4b4d4f;
+}
+
+.cm-s-custom-theme .cm-error {
+    /* color: #f00; */
+    color: #e06c75;
+}
+
+.cm-s-custom-theme .cm-link {
+    color: #98c379;
+    border-bottom: solid 1px #98c379;
+}
+
+.cm-s-custom-theme .cm-number {
+    color: #d19a66;
+}
+
+.cm-s-custom-theme .cm-searching {
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace !important;
+    font-size: 12px !important;
+}
+
+ .CodeMirror-hints {
+    
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace !important;
+    
+    /* need to figure out why color is not working */
+    border-radius: 0% !important;
+    background-color: #21252b !important;
+    border: none !important;
+    /* border-color: #21252b; */
+    /* padding: 10px !important; */
+    /* padding: 0 !important;
+    margin: 0 !important; */
+
+}
+
+.CodeMirror-hints .CodeMirror-hint-active {
+    color: #ffffff !important;
+    background-color: #2c2f33 !important;
+    /* #7289da */
+    border-radius: 0% !important;
+
+}
+
+.CodeMirror-hint {
+    color: #abb2bf !important;
+}
+
+.cm-s-custom-theme .cm-qualifier {
+    color: #d19a66 !important;
+}
+
+.cm-s-custom-theme .cm-meta {
+    color: #e06c75 !important;
+}
+
+
+
+
+
 
 
 

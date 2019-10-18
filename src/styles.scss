@@ -31,13 +31,13 @@ html, body {
 //   font-size: 16px !important; // originally 18px;
 // }
 
-.cm-s-one-dark .CodeMirror-matchingbracket {
+// .cm-s-one-dark .CodeMirror-matchingbracket {
 
-  outline:1px solid grey; 
-  //color:black !important;
-  border: none;
+//   outline:1px solid grey; 
+//   //color:black !important;
+//   border: none;
 
-}
+// }
 
 .container{
 
@@ -135,6 +135,7 @@ button {
   height: 100% !important;
   max-width: 100% !important;
   overflow: auto !important;
+  padding-top: 10px !important;
   //overflow: auto !important;
   //width: 100% !important;
 }
@@ -231,6 +232,7 @@ button {
 
 .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight {
   background-color: #282b33 !important;
+  // get lighter color
 }
 
 // .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight :hover {
@@ -247,4 +249,20 @@ button {
 
 }
 
+.CodeMirror-hints {
+  color: #abb2bf !important;
+}
 
+.ui-tree .ui-tree-filter-container .ui-tree-filter {
+  // width: 100%;
+  // padding-right: 2em;
+  background-color: #2c2f33 !important;
+  border: none !important;
+  color: #ffffff !important;
+
+}
+
+// QuickFind Icon color
+.pi-search:before {
+  color: #7289da !important;
+}

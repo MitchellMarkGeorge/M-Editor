@@ -1,5 +1,21 @@
 <p-toast key="save"></p-toast>
 
+<!-- Find a way to combine similar toasts/ modals -->
+
+<p-toast key="rename" position="center" [modal]="true">
+  <ng-template let-message pTemplate="message">
+    <div style="text-align: center; ">
+    <h3>
+      {{message.summary}}
+    </h3>
+    <p>{{message.detail}}</p>
+    <input type="text" required pInputText [(ngModel)]="input" (keydown.enter)="renameItem(selectedFile)">
+    <button pButton type="button" label="Rename" style="margin-right: 20px; margin-top: 20px; margin-bottom: 10px;" (click)="renameItem(selectedFile)" ></button>
+  </div>
+  
+  </ng-template>
+</p-toast>
+
 <p-toast key="new_file" position="center" [modal]="true">
   <ng-template let-message pTemplate="message">
     <div style="text-align: center; ">
@@ -37,10 +53,10 @@
             <h3>{{message.summary}}</h3>
             <p>{{message.detail}}</p>
         </div>
-        <div style="margin-left: 20px !important;">
-          <div>
-              <button type="button" pButton  label="Yes" ></button>
-              <button type="button" pButton label="No" ></button>
+        <div>
+          <div style="margin-left: 45px !important; margin-bottom: 10px;">
+              <button type="button" pButton  label="Yes" (click)="removeItem(selectedFile)" ></button>
+              <button type="button" pButton label="No" (click)="closeModal()" ></button>
           </div>
           
             

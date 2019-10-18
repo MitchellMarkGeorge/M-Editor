@@ -23,8 +23,20 @@ export default class Filetree {
     this.selectable = selectable;
     this.key;
     this.saved = true;
-    // would rather use numbers
+    //this.text;
+    // would rather use numbers for key
 
+    // let meditor_config_path = path_os.join(path, 'm-editor.json')
+
+    // if(!fs.existsSync(meditor_config_path)) {
+
+    //   try {
+    //   fs.writeFileSync(meditor_config_path, '{\n\t"runscript": "the script you want the editor to run to start your project."\n}')
+    //   } catch (err) {
+    //     ;
+    //   }
+    // }
+    // ASYNC OR SYNC
 
   }
 
@@ -37,6 +49,7 @@ export default class Filetree {
   expanded: boolean;
   key;
   saved: boolean;
+  //text
   // would rather use numbers
 
 
@@ -47,19 +60,11 @@ export default class Filetree {
   static readDir(path) {
     let fileArray = [];
 
-    let meditor_config_path = path_os.join(path, 'm-editor.json')
-
-    if(!fs.existsSync(meditor_config_path)) {
-
-      try {
-      fs.writeFileSync(meditor_config_path, '{\n\t"runscript": "the script you want the editor to run to start your project."\n}')
-      } catch (err) {
-        console.error(err);
-      }
-    }
+    
 
     let inital_array = fs.readdirSync(path);
-    console.log(inital_array);
+    // console.log(inital_array);
+    // might make async
 
     if (inital_array.length === 0) {
       console.log('empty arr');
@@ -105,12 +110,16 @@ export default class Filetree {
 
         if (stat.isDirectory()) {
 
+          //console.log('Folder');
+
           file_info.children = Filetree.readDir(file_info.path);
           file_info.selectable = false;
-          file_info.key = file_info.label
+          file_info.key = file_info.path
 
 
         } else if (stat.isFile()) {
+
+          //console.log('File')
 
           delete file_info.children;
 
@@ -124,9 +133,8 @@ export default class Filetree {
             if (file) { 
             let text = file.toString();
             file_info.mode = code.findModeByFileName(file_info.label);
-
-
             file_info.document = code.Doc(text, file_info.mode);
+            
             // code.modeURL = "node_modules/codemirror/mode/%N/%N.js"
             // code.requireMode(file_info.mode.mode, () => {
             //   console.log("done! mode loaded");
@@ -137,8 +145,18 @@ export default class Filetree {
 
           }
 
+          
+
         });
-          // file_info.document = data;
+
+        // file_info.mode = code.findModeByFileName(file_info.label);
+        // file_info.document = code.Doc(file_info.text, file_info.mode);
+
+        // let text: any = fs.readFileSync(file_path)
+        //   text = text.toString();
+        //   file_info.mode = code.findModeByFileName(file_info.label);
+        //   file_info.document = code.Doc(text, file_info.mode)
+          //file_info.document;
         } else if(err){
           console.log(err);
         }
@@ -146,7 +164,7 @@ export default class Filetree {
         // should i still do this???
 
 
-      fileArray.push(file_info);
+      //fileArray.push(file_info);
 
 
       }});
@@ -165,7 +183,7 @@ export default class Filetree {
     //   // should i still do this???
 
 
-    // fileArray.push(file_info);
+    fileArray.push(file_info);
 
 
     });
