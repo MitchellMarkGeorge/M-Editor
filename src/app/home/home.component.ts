@@ -74,7 +74,9 @@ export class HomeComponent implements OnInit {
 
     (file) => {
       if (file) {
-
+        if (file.length == 0) {
+          return;
+        }
         this.filepath = file[0]; // first element in the array
 
          this.zone.run(() => { this.navigate() });
@@ -85,7 +87,7 @@ export class HomeComponent implements OnInit {
 
 
 
-      }  // else if (canceled == true) return; // do nothing
+      } // else if (canceled == true) return; // do nothing
     });
   }
 

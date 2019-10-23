@@ -99,12 +99,16 @@
 }
 
 .cm-s-custom-theme .cm-type {
-    color: #e5c07b;
+    /* color: #e5c07b; */
+    /* font-weight: bold !important; */
+    font-style: italic !important;
 }
 
 /* work on this */
 .cm-s-custom-theme .cm-def {
-    color: #d37266;
+    /* color: #e06c75; */
+    /* color: #d19a66; */
+    color: #e5c07b;
 }
 
 .cm-s-custom-theme .cm-operator {
@@ -121,8 +125,8 @@
 }
 
 .cm-s-custom-theme .cm-variable {
-    /* color: #61afef; */
-    color: #e06c75;
+    color: #61afef;
+    /* color: #e06c75; */
 }
 
 .cm-s-custom-theme .cm-variable-2 {
@@ -207,7 +211,20 @@
     color: #e06c75 !important;
 }
 
+/* .cm-s-custom-theme .cm-string.cm-property {
+    color: #98c379;
+} */
 
+.cm-s-custom-theme .cm-header {color: #e06c75;}
+.cm-s-custom-theme .cm-quote {color: #5c6370;font-style: italic;}
+.cm-s-custom-theme .cm-negative {color: #e06c75;}
+.cm-s-custom-theme .cm-positive {color: #e06c75;}
+.cm-s-custom-theme .cm-strong {color: #d19a66;font-weight: bold;}
+.cm-s-custom-theme .cm-header .cm-strong {color: #d19a66;font-weight: bold;}
+.cm-s-custom-theme .cm-em {color: #c678dd;font-style: italic;}
+.cm-s-custom-theme .cm-header .cm-em {color: #c678dd;font-style: italic;}
+
+.cm-s-custom-theme .cm-builtin {color: #e06c75;}
 
 
 

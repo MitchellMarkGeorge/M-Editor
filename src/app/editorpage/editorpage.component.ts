@@ -58,14 +58,22 @@ export class EditorpageComponent implements OnInit {
     {label: 'New Folder', command: () => { this.newFolder() }},
     {label: 'Delete', command: () => { this.deleteItem() }},
     {label: 'Refresh FileTree', command: () => { this.refreshFiletree() }},
-    {label: 'Rename', command: () => { this.renameModal() }},
+    //{label: 'Toggle FileTree', command: () => { this.toggleFiletree() }},
+    {label: 'Rename', command: () => { this.renameModal() }}, // Works, but need to 'navigate' to new file to work properly and to be effective (Renaming directories work out fine) (rename file when it ois not open)
     {label: 'Generate M-Editor Config File', command: () => { this.generateM_EditorFile() }},
-    {label: 'Run Project', command: () => { this.runproject() }}
+    {label: 'Run Project', command: () => { this.runproject() }},
+    {label: 'Open Terminal', command: () => { this.OpenTerminal() }}  //move to MenuBar
     // rename
     // Refresh File tree
+    // copy absolute & relative path
     // add files to git
     // commit fles to git
     // install simple-git
+    // copy full path
+    // copy relative path
+    // quickfind 
+    // Open project
+    // reveal in Filder/ Folder System (is this needed)
     
   ];
 
@@ -75,6 +83,9 @@ export class EditorpageComponent implements OnInit {
   runscript;
   selectedFile;
   inital_tree;
+
+  // IMPORTANT !!!!
+  // IN ORDER TO RUN PROJECT ON MAC, YOU NEED TO GIVE M-EDITOR ACESS TO YOUR COMPUTER
   //m_editor_cofig_path = path_os.join(this.project_path, 'm-editor.json');
 
 
@@ -355,7 +366,7 @@ export class EditorpageComponent implements OnInit {
     //   console.log(this.getFileObject(path, [{path: path}]))
     // }
 
-    console.log(this.tree[0].children)
+    //console.log(this.tree[0].children)
 
     console.log(this.tree);
     //console.log(this.tree.flat())
@@ -433,8 +444,8 @@ export class EditorpageComponent implements OnInit {
 
 
  saveFile() {
-  // if a file is opend
-  if (this.last_opend_file){
+  // if a file is opend and the file exists (incase of a deleted file)
+  if (this.last_opend_file && fs.existsSync(this.last_opend_file.path)){
 
   let text = this.editor.getDoc().getValue();
   console.log("have value")
@@ -455,7 +466,7 @@ export class EditorpageComponent implements OnInit {
    this.last_opend_file.document.clearHistory();
   });
   } else {
-     return;
+     return; // toast - no file selected or file was deleted
   }
 
    
@@ -488,7 +499,7 @@ newFolder() {
 
 }
 
-createnewFile(){
+ createnewFile(){
 
   
   this.message.clear()
@@ -501,7 +512,7 @@ createnewFile(){
   }
 
   try {
-    fs.writeFileSync(path, '')
+    fs.writeFileSync(path, '') // might turn all file write methods to async
   } catch {
 
     this.message.add({key: 'save', severity: 'error', summary: `Could not make ${this.input}`, detail: 'Try again.'})
@@ -520,13 +531,18 @@ createnewFile(){
       this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
       
       // figure out why this happens - might change to sync methods
-      // setTimeout (() => {
-      //   let file_object = this.getFileObject(path, this.tree[0].children)
-      //   console.log(file_object);
-      //   this.swapDocFileObject(file_object);
-      //   this.selectedFile = file_object;
-      //   this.input = '';
-      // }, 250)
+        setTimeout (() => {
+          let file_object = this.getFileObject(this.tree[0], path)
+          console.log(file_object);
+          // if (file_object == null) toast
+
+          if (!file_object.childere == undefined) {
+          this.swapDocFileObject(file_object);
+          this.selectedFile = file_object;
+        }
+      // //   this.input = '';
+        }, 500) // make async
+        this.input = '';
 
       
 
@@ -618,7 +634,7 @@ runproject() {
 
 executeRunCommand() {
 
-  if (!this.runscript) {
+  if (!this.runscript) { // check if m-editor.json file exists ????
     return; // toast aleting there is no runscript, try again
   } else {
     if (os.platform() == 'darwin') {
@@ -626,6 +642,7 @@ executeRunCommand() {
       // REMEMBER - cd into project directory befor executing command
       // For mac, write Appscript scriot to do work (look at stack overflow)
       // Change cdm
+      // open terminal and execute runscript
       let cdm = [
         `osascript -e 'tell application "Terminal" to activate'`, 
         `-e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down'`, 
@@ -657,6 +674,22 @@ executeRunCommand() {
 
 }
 
+OpenTerminal() {
+  if (os.platform() == 'darwin') {
+    child_proccess.exec(`open -a Terminal ${this.project_path}`, (err) => {
+      if (err) {
+        console.log(err); // toast saying proces failed and might need to allow M-Editor to access computer
+      }
+    })
+  } else if (os.platform() == 'win32') {
+    child_proccess.exec(`start cmd.exe /K cd ${this.project_path}`, (err) => {
+      if (err) {
+        console.log(err); // toast - process failed
+      }
+    })
+  }
+} 
+
 deleteItem() {
 
   this.message.add({key: 'remove_comfirm', severity: 'warn',  summary: 'Are you sure you want to delete this?', detail: 'Please comfirm below.'})
@@ -664,73 +697,59 @@ deleteItem() {
 }
 // switch from liniear search to binary seach algorithm
 // figure out search algorithms
-getFileObject(file_path, tree) {
-  console.log('here');
-  console.log(file_path)
-  //console.log(tree);
-
-  let no_dir_array = tree.filter((items) => !items.children)
-  let dir_array =  tree.filter((items) => items.children)
-  if (tree.length === 0) {console.log('empty')} else {console.log('not empty')}
-
-  for (let file of no_dir_array) {
-    if (file_path == file.path) {
-      console.log('match made');
-      return file;
-    } else {
-      for (let element of dir_array) {
-        console.log('going in')
-        for (let items of element.children) {
-          if (file_path == items.path) {
-            console.log('match made');
-            return items;
-          } //else {
-          //   if (items.children) {
-          //     return this.getFileObject(file_path, items.children);
-          //   }
-          // } 
-        }
-      }
-    }
-  }
+// coud alsodiff old filertree and new one
+ 
+ getFileObject (element, file_path){
+     if(element.path == file_path){
+       console.log('match made');
+          return element;
+     }else if (element.children != undefined){
+          var i;
+          var result = null;
+          for(i=0; result == undefined && i < element.children.length; i++){
+               result = this.getFileObject(element.children[i], file_path);
+          }
+          return result;
+     }
+     return null;
+}
 
   
-  // for (let element of tree) {
-  //   console.log(element, file_path)
-  //   if (file_path == element.path) {
-  //     console.log('match made')
-  //     //console.log(element.children)
-  //     return element;
-  //    } //else if (element.children && element.children.length !== 0) {
+//   // for (let element of tree) {
+//   //   console.log(element, file_path)
+//   //   if (file_path == element.path) {
+//   //     console.log('match made')
+//   //     //console.log(element.children)
+//   //     return element;
+//   //    } //else if (element.children && element.children.length !== 0) {
 
-    //   console.log('moving on')
-    //   //console.log(element.path)
-    //   //console.log(element.children)
-    //   return this.getFileObject(file_path, element.children);
-    //  
+//     //   console.log('moving on')
+//     //   //console.log(element.path)
+//     //   //console.log(element.children)
+//     //   return this.getFileObject(file_path, element.children);
+//     //  
 
       
-    //   // console.log('moving on')
-    //   // console.log(element.path)
-    //   // console.log(element.children)
-    //   // this.getFileObject(file_path, element.children);
-    // }
-    //}
+//     //   // console.log('moving on')
+//     //   // console.log(element.path)
+//     //   // console.log(element.children)
+//     //   // this.getFileObject(file_path, element.children);
+//     // }
+//     //}
     
   
 
 
 
-}
+// }
 
 // might add notification saying navigated to new file
 swapDocFileObject(object) {
 
   console.log('tyring to swap doc')
 
-  console.log(object)
 
-  console.log(object.saved)
+  //console.log(object.saved)
 
   this.last_opend_file = object;
 
@@ -772,6 +791,7 @@ swapDocFileObject(object) {
 
 removeItem(object) {
 
+  
   this.message.clear();
 
   try {
@@ -781,10 +801,18 @@ removeItem(object) {
     // error toast
   }
 
-  this.message.add({key: 'save', severity: 'success', summary: `${object.label} has been removed sucessfully`, detail: 'Check filetree for changes.'});
+  this.message.add({key: 'save', severity: 'success', summary: `${object.label} has been deleted sucessfully`, detail: 'Check filetree for changes.'});
   this.refreshFiletree();
   this.input = '';
+  // would wanto remove current doc and chage lower bar text
+  
 
+  this.editor.getDoc().setValue('');
+
+  if (this.last_opend_file.path == object.path) {
+  this.current_filename = 'File Deleted. Select another file.'
+  this.language = '';
+  }
 }
 
 closeModal() {
@@ -812,7 +840,23 @@ renameItem(object) {
    console.log('item renamed'); 
    this.message.add({key: 'save', severity: 'success', summary: `${object.label} has been renamed sucessfully`, detail: 'Check filetree for changes.'});
    this.refreshFiletree();
+
+   // shoild be able to tell if it is a file or not
+  setTimeout(() => {
+    let file_object = this.getFileObject(this.tree[0], new_path);
+
+  console.log(file_object);
+
+  this.swapDocFileObject(file_object);
+
+  this.selectedFile = file_object;
    this.input = '';
+  }, 500)
+  // NEED TO FIGURE THIS OUT
+  
+   //this.swapDocFileObject('');
+
+  // NEED to navigate to "new" file 
 
 }
 

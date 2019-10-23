@@ -111,17 +111,16 @@ export default class Filetree {
         if (stat.isDirectory()) {
 
           //console.log('Folder');
-
-          file_info.children = Filetree.readDir(file_info.path);
           file_info.selectable = false;
           file_info.key = file_info.path
-
+          file_info.children = Filetree.readDir(file_info.path);
+          
 
         } else if (stat.isFile()) {
 
           //console.log('File')
 
-          delete file_info.children;
+          file_info.children = undefined;
 
           file_info.selectable = true;
           file_info.key = file_info.path;
@@ -187,6 +186,8 @@ export default class Filetree {
 
 
     });
+
+   
 
     return fileArray;
   }
