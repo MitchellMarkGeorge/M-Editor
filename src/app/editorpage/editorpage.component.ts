@@ -226,6 +226,9 @@ export class EditorpageComponent implements OnInit {
     // might listen to event on only soecific document when swapDoc is called
     this.editor.on("change", (cm, changes) => {
       console.log('content of editor changed')
+      // FUTURE AUTOSAVE FEATURE
+      // if on in the m-editor.json file, set a timeout for like 4 seconds and then call the save function
+      // cant work it ithere is no current document
 
       if (this.last_opend_file === undefined) {
         return;
@@ -529,19 +532,28 @@ newFolder() {
       
       this.refreshFiletree();
       this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
-      
+      let file_object = this.getFileObject(this.tree[0], path)
+      console.log(file_object);
+      console.log(file_object.document);
+      // doc is undefined - why
       // figure out why this happens - might change to sync methods
-        setTimeout (() => {
-          let file_object = this.getFileObject(this.tree[0], path)
-          console.log(file_object);
-          // if (file_object == null) toast
+      //   setTimeout (() => {
+          
 
-          if (!file_object.childere == undefined) {
-          this.swapDocFileObject(file_object);
-          this.selectedFile = file_object;
-        }
-      // //   this.input = '';
-        }, 500) // make async
+      //     let file_object = this.getFileObject(this.tree[0], path)
+      //     console.log(file_object);
+      //     this.swapDocFileObject(file_object);
+      //     this.selectedFile = file_object;
+            
+          
+          
+      //     // if (file_object == null) toast
+
+          
+          
+        
+      // // //   this.input = '';
+      //   }, 500) // make async
         this.input = '';
 
       
@@ -698,11 +710,13 @@ deleteItem() {
 // switch from liniear search to binary seach algorithm
 // figure out search algorithms
 // coud alsodiff old filertree and new one
- 
+ // optional callback
  getFileObject (element, file_path){
      if(element.path == file_path){
        console.log('match made');
+        
           return element;
+          
      }else if (element.children != undefined){
           var i;
           var result = null;
@@ -748,7 +762,9 @@ swapDocFileObject(object) {
 
   console.log('tyring to swap doc')
 
-
+  if (!object.document) {
+    console.log('no doc???')
+  }
   //console.log(object.saved)
 
   this.last_opend_file = object;
@@ -761,7 +777,7 @@ swapDocFileObject(object) {
 
   
   this.editor.swapDoc(object.document);
- 
+  
   //this.editor.swapDoc(object.document);
 
   // console.log(object.parent)
@@ -791,7 +807,7 @@ swapDocFileObject(object) {
 
 removeItem(object) {
 
-  
+  // might instead move items to the trash so that they can be recovered later if they need to
   this.message.clear();
 
   try {
@@ -825,6 +841,7 @@ renameModal() {
 
 renameItem(object) {
   this.message.clear();
+  // should check if the use is trying to rename project path
   let new_path = path_os.join(this.project_path, this.input);
   try {
     if (fs.existsSync(new_path)) {
@@ -847,11 +864,17 @@ renameItem(object) {
 
   console.log(file_object);
 
+  if (!file_object.childeren == undefined) {
+    return;
+  }
+
   this.swapDocFileObject(file_object);
 
   this.selectedFile = file_object;
-   this.input = '';
+   
   }, 500)
+
+  this.input = '';
   // NEED TO FIGURE THIS OUT
   
    //this.swapDocFileObject('');

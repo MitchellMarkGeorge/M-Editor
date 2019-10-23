@@ -105,7 +105,7 @@ export default class Filetree {
       //let stat = fs.statSync(file_info.path);;
 
       // make all fs methods async
-
+      // make stat/ readfile sync???
       fs.stat(file_info.path, (err, stat) => {if (stat){
 
         if (stat.isDirectory()) {
@@ -125,7 +125,7 @@ export default class Filetree {
           file_info.selectable = true;
           file_info.key = file_info.path;
           // i could also use label (i can have some files with the same name)
-
+          
 
 
           fs.readFile(file_path, (err, file) => {
