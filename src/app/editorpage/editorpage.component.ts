@@ -348,7 +348,7 @@ export class EditorpageComponent implements OnInit {
 
   }
 
-  buildFileTree(path) {
+  async buildFileTree(path) {
 
     
 
@@ -357,6 +357,8 @@ export class EditorpageComponent implements OnInit {
     this.tree.build();
     console.log(this.tree)
     this.tree = [this.tree];
+
+    return this.tree;
 
     // for(let node of this.tree) {
     //   node.expanded = true;
@@ -502,7 +504,7 @@ newFolder() {
 
 }
 
- createnewFile(){
+async createnewFile(){
 
   
   this.message.clear()
@@ -532,17 +534,19 @@ newFolder() {
       
       this.refreshFiletree();
       this.message.add({key: 'save', severity: 'success', summary: `New ${this.input} file made`, detail: 'Reopen filetree to see changes'});
-      let file_object = this.getFileObject(this.tree[0], path)
-      console.log(file_object);
-      console.log(file_object.document);
+      // let file_object = await this.getFileObject(tree[0], path)
+      // console.log(file_object);
+      // await file_object.document;
+      // await file_object.mode;
+      //console.log(file_object.document);
       // doc is undefined - why
       // figure out why this happens - might change to sync methods
-      //   setTimeout (() => {
+      //setTimeout (() => {
           
 
       //     let file_object = this.getFileObject(this.tree[0], path)
       //     console.log(file_object);
-      //     this.swapDocFileObject(file_object);
+        //this.swapDocFileObject(file_object);
       //     this.selectedFile = file_object;
             
           
@@ -553,7 +557,7 @@ newFolder() {
           
         
       // // //   this.input = '';
-      //   }, 500) // make async
+         //}, 800) // make async
         this.input = '';
 
       
@@ -611,6 +615,8 @@ refreshFiletree(){
   
   // so the editor is not affected - figure this out
   setTimeout(() => {this.editor.focus();}, 0)
+
+  return this.tree;
   //this.editor.focus();
 }
   
@@ -711,7 +717,7 @@ deleteItem() {
 // figure out search algorithms
 // coud alsodiff old filertree and new one
  // optional callback
- getFileObject (element, file_path){
+async getFileObject (element, file_path){ // is async needed
      if(element.path == file_path){
        console.log('match made');
         
@@ -721,7 +727,7 @@ deleteItem() {
           var i;
           var result = null;
           for(i=0; result == undefined && i < element.children.length; i++){
-               result = this.getFileObject(element.children[i], file_path);
+               result = await this.getFileObject(element.children[i], file_path); // await
           }
           return result;
      }
@@ -859,20 +865,20 @@ renameItem(object) {
    this.refreshFiletree();
 
    // shoild be able to tell if it is a file or not
-  setTimeout(() => {
-    let file_object = this.getFileObject(this.tree[0], new_path);
+  //setTimeout(() => {
+  //   let file_object = this.getFileObject(this.tree[0], new_path);
 
-  console.log(file_object);
+  // console.log(file_object);
 
-  if (!file_object.childeren == undefined) {
-    return;
-  }
+  // if (!file_object.childeren == undefined) {
+  //   return;
+  // }
 
-  this.swapDocFileObject(file_object);
+  // this.swapDocFileObject(file_object);
 
-  this.selectedFile = file_object;
+  // this.selectedFile = file_object;
    
-  }, 500)
+  //}, 500)
 
   this.input = '';
   // NEED TO FIGURE THIS OUT

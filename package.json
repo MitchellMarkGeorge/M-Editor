@@ -26,8 +26,7 @@
     "lint": "ng lint",
     "build:2": "npm run postinstall:electron && ng build --prod",
     "pack-win": "npm run build:2 && electron-packager . M-Editor --asar=true --platform=win32 --arch=x64  --overwrite --asar",
-    "pack-osx": "npm run build:2 && electron-packager . M-Editor --platform=darwin --arch=x64 --overwrite",
-    "make": "electron-forge make"
+    "pack-osx": "npm run build:2 && electron-packager . M-Editor --platform=darwin --arch=x64 --overwrite"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.800.2",
@@ -43,6 +42,7 @@
     "@angular/router": "8.0.0",
     "@ngx-translate/core": "11.0.1",
     "@ngx-translate/http-loader": "4.0.0",
+    "@types/fs-extra": "^8.0.1",
     "@types/jasmine": "3.3.13",
     "@types/jasminewd2": "2.0.6",
     "@types/mocha": "5.2.7",

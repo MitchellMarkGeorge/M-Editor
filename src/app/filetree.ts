@@ -1,3 +1,5 @@
+
+  
 import * as fs from 'fs';
 
 import * as path_os from 'path';
@@ -21,8 +23,10 @@ export default class Filetree {
     this.label = name;
     this.children = [];
     this.selectable = selectable;
-    this.key;
+    this.key = undefined;
     this.saved = true;
+    this.document = undefined;
+    this.mode = undefined;
     //this.text;
     // would rather use numbers for key
 
@@ -210,3 +214,4 @@ export default class Filetree {
 
 
 }
+
