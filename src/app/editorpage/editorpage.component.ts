@@ -103,7 +103,7 @@ export class EditorpageComponent implements OnInit {
 
     
 
-    // let Menu = remote.Menu;
+    //  let Menu = remote.Menu;
     
     
 
